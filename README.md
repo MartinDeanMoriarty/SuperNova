@@ -3,7 +3,7 @@ SuperNova
 
 SuperNova is a so called vertical scroller. 
 
-(doc/supernova.jpg)
+![SuperNova](https://raw.githubusercontent.com/mpue/SuperNova/master/doc/supernova.jpg)
 
 In fact this is a proof-of concept for a so called vertical scroller.
 It may act as a starting point for a simple game. As a popular example

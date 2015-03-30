@@ -125,7 +125,7 @@ public class MusicPlayer {
 		new Thread(new Runnable() {
 			
 			@Override
-			public void run() {
+			public synchronized void run() {
 				try {
 					player = new Player(songInput);			
 					player.play();

@@ -62,11 +62,12 @@ public class SuperNova {
 
 	static Ship ship;
 
-	private static ArrayList<Bullet> bullets = new ArrayList<Bullet>();
-	private static ArrayList<Enemy> enemies = new ArrayList<Enemy>();
-	private static ArrayList<IExplodable> explodables = new ArrayList<IExplodable>();
-	private static ArrayList<IDrawable> drawables = new ArrayList<IDrawable>();
-	private static ArrayList<IFadeable> fadeables = new ArrayList<IFadeable>();
+	private static final ArrayList<Bullet> bullets = new ArrayList<Bullet>();
+	private static final ArrayList<Enemy> enemies = new ArrayList<Enemy>();
+	private static final ArrayList<Entity>entities = new ArrayList<Entity>();
+	private static final ArrayList<IExplodable> explodables = new ArrayList<IExplodable>();
+	private static final ArrayList<IDrawable> drawables = new ArrayList<IDrawable>();
+	private static final ArrayList<IFadeable> fadeables = new ArrayList<IFadeable>();
 
 	static Random random;
 
@@ -98,6 +99,10 @@ public class SuperNova {
 	static GLBarGraphDisplay energyDisplay;
 
 	static GameState gameState = GameState.MENU;
+
+	private static long lastEntityTime = 5000l;
+
+	private static int reloadSource;
 
 	private SuperNova() {
 	}
@@ -151,7 +156,8 @@ public class SuperNova {
 		laserSource = sm.addSound("laser.wav");
 		explosionSource = sm.addSound("explosion.wav");
 		energyWarningSource = sm.addSound("energywarning.wav");
-
+		reloadSource = sm.addSound("reload.wav");
+		
 		sm.adjustAllVolumes(0.4f);
 		sm.adjustVolume(2, 2.0f);
 
@@ -265,7 +271,6 @@ public class SuperNova {
 			break;
 		default:
 			break;
-
 		}
 
 	}
@@ -305,10 +310,11 @@ public class SuperNova {
 
 	private static void processGameOverLogic() {
 
-		createRandomEnemies();
+		createRandomEntities();
 		enemiesShoot();
 		moveBullets();
 		moveEnemies();
+		moveEntities();
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
 			musicPlayer.nextSong();
@@ -340,18 +346,24 @@ public class SuperNova {
 		}
 	}
 
-	private static void createRandomEnemies() {
+	private static void createRandomEntities() {
 		if (System.currentTimeMillis() - lastEnemyTime > 500 && System.currentTimeMillis() - startTime > 5000) {
 			float f = random.nextFloat();
 			long t = random.nextInt(500);
 			enemies.add(new Enemy(WIDTH * f, HEIGHT, 4, 1000 + t));
 			lastEnemyTime = System.currentTimeMillis();
 		}
-	}
-
+		if (System.currentTimeMillis() - lastEntityTime > 5000l && System.currentTimeMillis() - startTime > 5000) {
+			float f = random.nextFloat();
+			entities.add(new Ammo(WIDTH * f, HEIGHT, 4));
+			lastEntityTime = System.currentTimeMillis();
+			System.out.println("added ammo");
+		}
+	}	
+	
 	private static void processRunningStateLogic() {
 
-		createRandomEnemies();
+		createRandomEntities();
 		enemiesShoot();
 
 		shoot();
@@ -435,20 +447,18 @@ public class SuperNova {
 		if (yPos > 540) {
 			yPos = 540;
 		}
-
-		
-		System.out.println(yPos);
 		
 		shootX = xPos;
 		shootY = yPos;
 
 		moveBullets();
 		moveEnemies();
-
+		moveEntities();
+		
 		for (Iterator<Bullet> bulletIt = bullets.iterator(); bulletIt.hasNext();) {
 
-			Bullet bullet = bulletIt.next();
-
+			Bullet bullet = bulletIt.next();	
+			
 			// Any enemy hit ?
 			for (Iterator<Enemy> it = enemies.iterator(); it.hasNext();) {
 				Enemy enemy = it.next();
@@ -523,6 +533,26 @@ public class SuperNova {
 				}
 			}
 		}
+		
+		// Any entity hit??
+		
+		for (Iterator<Entity> it = entities.iterator();it.hasNext();) {
+			
+			Entity entity = it.next();
+			
+			if (entity.collides(ship)) {
+				it.remove();
+				
+				if (entity instanceof Ammo) {
+					ammo += 1000;					
+					ammoText.setText("Ammo "+ ammo);
+					if (!sm.isPlayingSound())
+						sm.playEffect(reloadSource);
+				}
+				
+			}
+			
+		}
 
 		yOffset += velocity;
 
@@ -568,6 +598,20 @@ public class SuperNova {
 				bullet.fly();
 			}
 
+		}
+	}
+	
+	private static void moveEntities() {
+		for (Iterator<Entity> it = entities.iterator(); it.hasNext();) {
+			
+			Entity entity = it.next();
+			
+			if (entity.getYLoc() > 600 && entity.getYLoc() < 0) {
+				it.remove();
+			}
+			else {
+				entity.fly();
+			}			
 		}
 	}
 
@@ -634,6 +678,10 @@ public class SuperNova {
 		for (Enemy enemy : enemies) {
 			enemy.draw();
 		}
+		for (Entity entity : entities) {
+			entity.draw();
+		}
+
 
 		ship.draw();
 		scoreText.draw();
@@ -717,6 +765,9 @@ public class SuperNova {
 		}
 		for (Enemy enemy : enemies) {
 			enemy.draw();
+		}
+		for (Entity entity : entities) {
+			entity.draw();
 		}
 
 		ship.draw();

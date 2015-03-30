@@ -79,16 +79,6 @@ public class Ship extends Entity implements IExplodable, IDrawable {
 		return false;
 	}
 	
-	
-	
-	public boolean isVisible() {
-		return visible;
-	}
-
-	public void setVisible(boolean visible) {
-		this.visible = visible;
-	}
-
 	public void draw() {
 		
 		if (!visible)
@@ -166,6 +156,10 @@ public class Ship extends Entity implements IExplodable, IDrawable {
 		GL11.glPopMatrix();
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 
+	}
+
+	@Override
+	public void fly() {	
 	}
 
 }

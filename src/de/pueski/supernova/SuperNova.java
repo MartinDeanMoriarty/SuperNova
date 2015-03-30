@@ -22,8 +22,9 @@ public class SuperNova {
 
 	private static final int WIDTH = 600;
 	private static final int HEIGHT = 600;
-
 	private static final int FRAMERATE = 100;
+	private static final int MAX_AMMO = 1000;
+	
 	private static boolean finished;
 
 	static float velocity = 1.0f;
@@ -33,6 +34,8 @@ public class SuperNova {
 
 	static float xPos = 0;
 	static float yPos = 0;
+	
+	static int ammo = MAX_AMMO;
 
 	static int texId1;
 	static int texId2;
@@ -71,6 +74,8 @@ public class SuperNova {
 
 	static long frameTime;
 
+	static long startTime;
+	
 	static SoundManager sm;
 
 	static int laserSource;
@@ -81,7 +86,7 @@ public class SuperNova {
 	static Text energyText;
 	static Text menuText;
 	static Text gameOverText;
-	static Text offsetText;
+	static Text ammoText;
 	static Text nowPlaying;
 	static Text songName;
 	static Text pauseText;
@@ -150,11 +155,11 @@ public class SuperNova {
 		sm.adjustAllVolumes(0.4f);
 		sm.adjustVolume(2, 2.0f);
 
-		scoreText = new Text(10, 570, "Score : " + score);
+		scoreText = new Text(10, 570, "Score " + score);
 		energyText = new Text(270, 570, "Energy");
 		menuText = new Text(190, 300, "Press Space to start.");
 		gameOverText = new Text(190, 300, "Game over! Score : " + score);
-		offsetText = new Text(10, 550, "YOffset : " + yOffset);
+		ammoText = new Text(10, 550, "Ammo " + ammo);
 		nowPlaying = new Text(10, 40, "Now playing");
 		songName = new Text(10, 20, "");
 		pauseText = new Text(280, 300, "Pause");
@@ -236,6 +241,7 @@ public class SuperNova {
 		Display.destroy();
 		Keyboard.destroy();
 		Mouse.destroy();
+		Controllers.destroy();
 	}
 
 	private static void logic() {
@@ -284,6 +290,7 @@ public class SuperNova {
 			energyDisplay.setValue(100);
 			scoreText.setText("Score : " + score);
 			gameState = GameState.RUNNING;
+			startTime = System.currentTimeMillis();
 		}
 		if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
 			finished = true;
@@ -334,7 +341,7 @@ public class SuperNova {
 	}
 
 	private static void createRandomEnemies() {
-		if (System.currentTimeMillis() - lastEnemyTime > 500) {
+		if (System.currentTimeMillis() - lastEnemyTime > 500 && System.currentTimeMillis() - startTime > 5000) {
 			float f = random.nextFloat();
 			long t = random.nextInt(500);
 			enemies.add(new Enemy(WIDTH * f, HEIGHT, 4, 1000 + t));
@@ -415,6 +422,23 @@ public class SuperNova {
 			yPos = Mouse.getY();			
 		}
 
+		if (xPos < 60) {
+			xPos = 60;
+		}
+		if (xPos > 540) {
+			xPos = 540;
+		}
+
+		if (yPos < 60) {
+			yPos = 60;
+		}
+		if (yPos > 540) {
+			yPos = 540;
+		}
+
+		
+		System.out.println(yPos);
+		
 		shootX = xPos;
 		shootY = yPos;
 
@@ -502,8 +526,6 @@ public class SuperNova {
 
 		yOffset += velocity;
 
-		offsetText.setText("YOffset : " + yOffset);
-
 		if (yOffset >= 3600)
 			yOffset = 0;
 
@@ -551,14 +573,18 @@ public class SuperNova {
 
 	private static void shoot() {
 		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE) || Mouse.isButtonDown(0) || ((defaultController != null) && defaultController.isButtonPressed(0))) {
-			if (System.currentTimeMillis() - lastShotTime > 200) {
-				bullets.add(new Bullet(shootX + 8, shootY, 1));
-				bullets.add(new Bullet(shootX + -8, shootY, 1));
-				bullets.add(new Bullet(shootX + 43, shootY - 8, 1));
-				bullets.add(new Bullet(shootX + -43, shootY - 8, 1));
-				lastShotTime = System.currentTimeMillis();
-				if (!sm.isPlayingSound())
-					sm.playEffect(laserSource);
+			if (ammo > 0) {
+				if (System.currentTimeMillis() - lastShotTime > 200) {
+					bullets.add(new Bullet(shootX + 8, shootY, 1));
+					bullets.add(new Bullet(shootX + -8, shootY, 1));
+					bullets.add(new Bullet(shootX + 43, shootY - 8, 1));
+					bullets.add(new Bullet(shootX + -43, shootY - 8, 1));
+					lastShotTime = System.currentTimeMillis();
+					if (!sm.isPlayingSound())
+						sm.playEffect(laserSource);
+				}
+				ammo--;
+				ammoText.setText("Ammo " + ammo);				
 			}
 		}
 	}
@@ -612,7 +638,7 @@ public class SuperNova {
 		ship.draw();
 		scoreText.draw();
 		energyText.draw();
-		offsetText.draw();
+		ammoText.draw();
 		pauseText.draw();
 
 		for (IDrawable drawable : drawables) {
@@ -641,17 +667,6 @@ public class SuperNova {
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		GL11.glColor3f(1.0f, 1.0f, 1.0f);
-
-		// TextureUtil.drawTexturedSquare(0, 300, 900 - starfieldYOffset, 600,
-		// starfieldTexId);
-		// TextureUtil.drawTexturedSquare(0, 300, 3900 - yOffset, 600, texId1);
-		// TextureUtil.drawTexturedSquare(0, 300, 3300 - yOffset, 600, texId6);
-		// TextureUtil.drawTexturedSquare(0, 300, 2700 - yOffset, 600, texId5);
-		// TextureUtil.drawTexturedSquare(0, 300, 2100 - yOffset, 600, texId4);
-		// TextureUtil.drawTexturedSquare(0, 300, 1500 - yOffset, 600, texId3);
-		// TextureUtil.drawTexturedSquare(0, 300, 900 - yOffset, 600, texId2);
-		// TextureUtil.drawTexturedSquare(0, 300, 300 - yOffset, 600, texId1);
-
 		GL11.glPushMatrix();
 		GL11.glTranslatef(0, -yOffset, 0);
 		GL11.glCallList(displayListId);
@@ -692,22 +707,6 @@ public class SuperNova {
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		GL11.glColor3f(1.0f, 1.0f, 1.0f);
-
-		// TextureUtil.drawTexturedSquare(0, 300, 900 - starfieldYOffset, 600,
-		// starfieldTexId);
-		// TextureUtil.drawTexturedSquare(0, 300, 300 - starfieldYOffset, 600,
-		// starfieldTexId);
-
-		// TextureUtil.drawTexturedSquare(0, 300, 3900 - yOffset, 600, texId1);
-		// TextureUtil.drawTexturedSquare(0, 300, 3300 - yOffset, 600, texId6);
-		// TextureUtil.drawTexturedSquare(0, 300, 2700 - yOffset, 600, texId5);
-		// TextureUtil.drawTexturedSquare(0, 300, 2100 - yOffset, 600, texId4);
-		// TextureUtil.drawTexturedSquare(0, 300, 1500 - yOffset, 600, texId3);
-		// TextureUtil.drawTexturedSquare(0, 300, 900 - yOffset, 600, texId2);
-		// TextureUtil.drawTexturedSquare(0, 300, 300 - yOffset, 600, texId1);
-		//
-		// GL11.glDisable(GL11.GL_TEXTURE_2D);
-
 		GL11.glPushMatrix();
 		GL11.glTranslatef(0, -yOffset, 0);
 		GL11.glCallList(displayListId);
@@ -770,7 +769,7 @@ public class SuperNova {
 
 		scoreText.draw();
 		energyText.draw();
-		offsetText.draw();
+		ammoText.draw();
 		nowPlaying.draw();
 		songName.draw();
 

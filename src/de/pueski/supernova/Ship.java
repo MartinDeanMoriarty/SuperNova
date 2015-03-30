@@ -2,17 +2,12 @@ package de.pueski.supernova;
 
 import org.lwjgl.opengl.GL11;
 
-public class Ship implements IExplodable, IDrawable {
-
-	private float xLoc;
-	private float yLoc;
+public class Ship extends Entity implements IExplodable, IDrawable {
 	
 	private int energy;
 	
 	private int texId;
 	private int shadowTexId;
-	
-	private static final float size = 25.0f;
 	
 	private long index; 
 	
@@ -35,34 +30,7 @@ public class Ship implements IExplodable, IDrawable {
 		this.shadowTexId = TextureManager.getInstance().getTexture("viper_shadow.png");		
 		this.explosionTexId = TextureManager.getInstance().getTexture("explosion0.png");
 		this.visible = true;
-	}
-
-	/**
-	 * @return the xLoc
-	 */
-	public float getXLoc() {
-		return xLoc;
-	}
-
-	/**
-	 * @param xLoc the xLoc to set
-	 */
-	public void setXLoc(float xLoc) {
-		this.xLoc = xLoc;
-	}
-
-	/**
-	 * @return the yLoc
-	 */
-	public float getYLoc() {
-		return yLoc;
-	}
-
-	/**
-	 * @param yLoc the yLoc to set
-	 */
-	public void setYLoc(float yLoc) {
-		this.yLoc = yLoc;
+		this.size = 25.0f;
 	}
 
 	public boolean hit() {
@@ -199,16 +167,5 @@ public class Ship implements IExplodable, IDrawable {
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 
 	}
-	
-	public boolean collides(Enemy enemy) {		
-		float x = enemy.getXLoc();
-		float y = enemy.getYLoc();		
-		return (x >= xLoc - size && x <= xLoc + size && y >= yLoc - size && y <= yLoc + size);		
-	}
-	
-	public boolean collides(Bullet bullet) {
-		float x = bullet.getXLoc();
-		float y = bullet.getYLoc();
-		return (x >= xLoc - size && x <= xLoc + size && y >= yLoc - size && y <= yLoc + size);
-	}
+
 }

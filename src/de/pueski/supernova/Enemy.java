@@ -2,14 +2,10 @@ package de.pueski.supernova;
 
 import org.lwjgl.opengl.GL11;
 
-public class Enemy implements IExplodable {
-
-	private float xLoc;
-	private float yLoc;
+public class Enemy extends Entity implements IExplodable {
 
 	private static final float speed = 3.0f;
-	private static final float size = 20.0f;
-
+	
 	private int gridSize = 8;
 
 	private int hitPoints;
@@ -38,6 +34,7 @@ public class Enemy implements IExplodable {
 		this.explosionTexId = TextureManager.getInstance().getTexture("explosion0.png");
 		this.lastShotTime = System.currentTimeMillis();
 		this.shotInterval = shotInterval;
+		this.size = 20.0f;
 	}
 
 	/**
@@ -46,36 +43,6 @@ public class Enemy implements IExplodable {
 	public int hit() {
 		hitPoints--;
 		return hitPoints;
-	}
-
-	/**
-	 * @return the xLoc
-	 */
-	public float getXLoc() {
-		return xLoc;
-	}
-
-	/**
-	 * @param xLoc
-	 *            the xLoc to set
-	 */
-	public void setXLoc(float xLoc) {
-		this.xLoc = xLoc;
-	}
-
-	/**
-	 * @return the yLoc
-	 */
-	public float getYLoc() {
-		return yLoc;
-	}
-
-	/**
-	 * @param yLoc
-	 *            the yLoc to set
-	 */
-	public void setYLoc(float yLoc) {
-		this.yLoc = yLoc;
 	}
 
 	@Override
@@ -152,12 +119,6 @@ public class Enemy implements IExplodable {
 
 	}
 
-	public boolean collides(Bullet bullet) {
-		float x = bullet.getXLoc();
-		float y = bullet.getYLoc();
-		return (x >= xLoc - size && x <= xLoc + size && y >= yLoc - size && y <= yLoc + size);
-	}
-
 	public int getExplosionIndex() {
 		return explosionIndex;
 	}
@@ -181,7 +142,5 @@ public class Enemy implements IExplodable {
 	public void setShotInterval(long shotInterval) {
 		this.shotInterval = shotInterval;
 	}
-	
-	
 
 }

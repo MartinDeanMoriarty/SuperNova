@@ -6,13 +6,9 @@ import org.lwjgl.opengl.GL11;
 
 import de.pueski.supernova.tools.TextureUtil;
 
-public class Bullet {
+public class Bullet extends Entity {
 
-	private float xLoc;
-	private float yLoc;
-	
 	private static final float speed = 10.0f;
-	private static final float size = 5.0f;
 	
 	private int texId;
 	
@@ -27,37 +23,9 @@ public class Bullet {
 		InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("laser.png");		
 		this.texId = TextureUtil.loadTexture(is);
 		this.direction = direction;
-
+		this.size = 5.0f;
 	}
 
-	/**
-	 * @return the xLoc
-	 */
-	public float getXLoc() {
-		return xLoc;
-	}
-
-	/**
-	 * @param xLoc the xLoc to set
-	 */
-	public void setXLoc(float xLoc) {
-		this.xLoc = xLoc;
-	}
-
-	/**
-	 * @return the yLoc
-	 */
-	public float getYLoc() {
-		return yLoc;
-	}
-
-	/**
-	 * @param yLoc the yLoc to set
-	 */
-	public void setYLoc(float yLoc) {
-		this.yLoc = yLoc;
-	}
-	
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == null)
@@ -108,6 +76,4 @@ public class Bullet {
 		this.direction = direction;
 	}
 	
-	
-
 }

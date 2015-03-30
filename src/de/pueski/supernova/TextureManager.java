@@ -20,12 +20,25 @@ public class TextureManager {
 		addTexture("spaceship_transp.png");
 		addTexture("supernova.png");
 		addTexture("starfield.png");
-		addTexture("1_Mars.png");
-		addTexture("2_Mars.png");
-		addTexture("3_Mars.png");
-		addTexture("4_Mars.png");
-		addTexture("5_Mars.png");
-		addTexture("6_Mars.png");
+//		addTexture("1_Mars.png");
+//		addTexture("2_Mars.png");
+//		addTexture("3_Mars.png");
+//		addTexture("4_Mars.png");
+//		addTexture("5_Mars.png");
+//		addTexture("6_Mars.png");
+		addTexture("1.png");
+		addTexture("2.png");
+		addTexture("3.png");
+		addTexture("4.png");
+		addTexture("5.png");
+		addTexture("6.png");
+		addTexture("mars_01.png");
+		addTexture("mars_02.png");
+		addTexture("mars_03.png");
+		addTexture("mars_04.png");
+		addTexture("mars_05.png");
+		addTexture("mars_06.png");
+
 	}
 	
 	static TextureManager getInstance() {

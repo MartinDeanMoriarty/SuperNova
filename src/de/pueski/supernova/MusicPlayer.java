@@ -17,7 +17,7 @@ public class MusicPlayer {
 	private ArrayList<File> songs;	
 	private int songIndex = 0;	
 	private InputStream songInput;	
-	private Player player; 
+	private volatile Player player; 
 	
 	public MusicPlayer() {		
 		
@@ -75,7 +75,7 @@ public class MusicPlayer {
 		play();		
 	}
 	
-	public void nextSong() {
+	public synchronized void nextSong() {
 		
 		if (songIndex < songs.size() - 1) {
 			songIndex++;
@@ -98,7 +98,7 @@ public class MusicPlayer {
 		play();
 	}
 	
-	public void previousSong() {
+	public synchronized void previousSong() {
 		
 		if (songIndex > 0) {
 			songIndex--;
@@ -121,7 +121,7 @@ public class MusicPlayer {
 		play();
 	}
 
-	public void play() {
+	public synchronized void play() {
 		new Thread(new Runnable() {
 			
 			@Override

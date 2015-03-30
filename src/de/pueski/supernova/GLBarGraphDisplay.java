@@ -11,6 +11,8 @@ public class GLBarGraphDisplay implements IDrawable {
 	
 	private int value;
 	
+	private boolean visible = true;
+	
 	private float xloc;
 	private float yloc;
 	
@@ -285,6 +287,16 @@ public class GLBarGraphDisplay implements IDrawable {
 	 */
 	public void setBorder(boolean border) {
 		this.border = border;
+	}
+
+	@Override
+	public boolean isVisible() {
+		return visible;
+	}
+
+	@Override
+	public void setVisible(boolean visible) {
+		this.visible = visible;
 	}
 	
 	

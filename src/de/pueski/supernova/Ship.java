@@ -2,7 +2,7 @@ package de.pueski.supernova;
 
 import org.lwjgl.opengl.GL11;
 
-public class Ship implements IExplodable {
+public class Ship implements IExplodable, IDrawable {
 
 	private float xLoc;
 	private float yLoc;

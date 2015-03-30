@@ -7,7 +7,7 @@ import org.lwjgl.opengl.GL11;
 
 import de.pueski.supernova.tools.TextureUtil;
 
-public class Text implements IFadeable {
+public class Text implements IFadeable, IDrawable {
 
 	private float xLoc;
 	private float yLoc;
@@ -26,6 +26,7 @@ public class Text implements IFadeable {
 	private float opacity = 1.0f;
 	
 	private Fade mode;
+	private boolean visible = true;
 	
 	private static final class Glyph {
 		int x;
@@ -279,5 +280,13 @@ public class Text implements IFadeable {
 		this.mode = mode;
 	}
 
+	@Override
+	public boolean isVisible() {
+		return visible;
+	}
 
+	@Override
+	public void setVisible(boolean visible) {
+		this.visible = visible;
+	}
 }

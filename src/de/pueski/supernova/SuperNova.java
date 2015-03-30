@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
 
+import org.lwjgl.input.Controller;
+import org.lwjgl.input.Controllers;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
@@ -51,6 +53,8 @@ public class SuperNova {
 	static long lastEnemyTime;
 	static long lastEnemyShootTime;
 
+	static Controller defaultController;
+	
 	static int enemiesShot = 0;
 
 	static Ship ship;
@@ -80,6 +84,8 @@ public class SuperNova {
 	static Text offsetText;
 	static Text nowPlaying;
 	static Text songName;
+	static Text pauseText;
+	
 	static int score;
 
 	static MusicPlayer musicPlayer;
@@ -107,6 +113,17 @@ public class SuperNova {
 		Keyboard.create();
 		Mouse.create();
 		Mouse.setGrabbed(true);
+
+		Controllers.create();		
+		Controllers.poll();
+		
+		for (int i = 0; i < Controllers.getControllerCount();i++) {
+			Controller controller = Controllers.getController(i);			
+			if (controller.getName().startsWith("XBOX")) {
+				defaultController = controller;				
+			}
+		}
+
 		GL11.glMatrixMode(GL11.GL_PROJECTION);
 		GL11.glLoadIdentity();
 		GL11.glOrtho(0.0D, Display.getDisplayMode().getWidth(), 0.0D, Display.getDisplayMode().getHeight(), -1D, 1.0D);
@@ -130,7 +147,7 @@ public class SuperNova {
 		explosionSource = sm.addSound("explosion.wav");
 		energyWarningSource = sm.addSound("energywarning.wav");
 
-		sm.adjustAllVolumes(0.5f);
+		sm.adjustAllVolumes(0.4f);
 		sm.adjustVolume(2, 2.0f);
 
 		scoreText = new Text(10, 570, "Score : " + score);
@@ -140,6 +157,7 @@ public class SuperNova {
 		offsetText = new Text(10, 550, "YOffset : " + yOffset);
 		nowPlaying = new Text(10, 40, "Now playing");
 		songName = new Text(10, 20, "");
+		pauseText = new Text(280, 300, "Pause");
 
 		nowPlaying.setOpacity(0.0f);
 		songName.setOpacity(0.0f);
@@ -171,13 +189,12 @@ public class SuperNova {
 	}
 
 	private static void loadTextures() {
-		texId1 = TextureManager.getInstance().getTexture("1_Mars.png");
-		texId2 = TextureManager.getInstance().getTexture("2_Mars.png");
-		texId3 = TextureManager.getInstance().getTexture("3_Mars.png");
-		texId4 = TextureManager.getInstance().getTexture("4_Mars.png");
-		texId5 = TextureManager.getInstance().getTexture("5_Mars.png");
-		texId6 = TextureManager.getInstance().getTexture("6_Mars.png");
-
+		texId1 = TextureManager.getInstance().getTexture("mars_06.png");
+		texId2 = TextureManager.getInstance().getTexture("mars_05.png");
+		texId3 = TextureManager.getInstance().getTexture("mars_04.png");
+		texId4 = TextureManager.getInstance().getTexture("mars_03.png");
+		texId5 = TextureManager.getInstance().getTexture("mars_02.png");
+		texId6 = TextureManager.getInstance().getTexture("mars_01.png");
 		menuTexId = TextureManager.getInstance().getTexture("supernova.png");
 		starfieldTexId = TextureManager.getInstance().getTexture("starfield.png");
 	}
@@ -228,6 +245,9 @@ public class SuperNova {
 		case RUNNING:
 			processRunningStateLogic();
 			break;
+		case PAUSE: 
+			processPauseLogic();
+			break;
 		case GAME_OVER:
 			processGameOverLogic();
 			break;
@@ -244,12 +264,19 @@ public class SuperNova {
 
 	}
 
+	private static void processPauseLogic() {		
+		if (Keyboard.isKeyDown(Keyboard.KEY_P)) {			
+			gameState = GameState.RUNNING;
+			Keyboard.enableRepeatEvents(true);
+		}
+	}
+
 	private static void processLevelEndLogic() {
 	}
 
 	private static void processMenuLogic() {
 
-		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
+		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE) || ((defaultController != null) && defaultController.isButtonPressed(0))) {
 			musicPlayer.nextSong();
 			score = 0;
 			ship.setEnergy(100);
@@ -344,7 +371,7 @@ public class SuperNova {
 		if (Keyboard.isKeyDown(Keyboard.KEY_E)) {
 			sm.playEffect(energyWarningSource);
 		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_N)) {
+		if (Keyboard.isKeyDown(Keyboard.KEY_N)  || ((defaultController != null) && defaultController.isButtonPressed(4))) {
 			musicPlayer.previousSong();
 			songName.setText(musicPlayer.getCurrentSongName());
 			nowPlaying.setMode(Fade.IN);
@@ -352,7 +379,7 @@ public class SuperNova {
 			fadeables.add(nowPlaying);
 			fadeables.add(songName);
 		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_M)) {
+		if (Keyboard.isKeyDown(Keyboard.KEY_M)  || ((defaultController != null) && defaultController.isButtonPressed(5))) {
 			musicPlayer.nextSong();
 			songName.setText(musicPlayer.getCurrentSongName());
 			nowPlaying.setMode(Fade.IN);
@@ -368,9 +395,25 @@ public class SuperNova {
 				sm.playEffect(explosionSource);
 			}
 		}
-
-		xPos = Mouse.getX();
-		yPos = Mouse.getY();
+		
+		if (Keyboard.isKeyDown(Keyboard.KEY_P)) {
+			Keyboard.enableRepeatEvents(false);
+			gameState = GameState.PAUSE;			
+		}
+		
+		if (defaultController != null) {
+			if (Math.abs(defaultController.getXAxisValue()) > 0.3) {
+				xPos += defaultController.getXAxisValue() * 5;
+			}
+			if (Math.abs(defaultController.getYAxisValue()) > 0.3) {
+				yPos -= defaultController.getYAxisValue() * 5;
+			}
+			
+		}
+		else {
+			xPos = Mouse.getX();
+			yPos = Mouse.getY();			
+		}
 
 		shootX = xPos;
 		shootY = yPos;
@@ -507,7 +550,7 @@ public class SuperNova {
 	}
 
 	private static void shoot() {
-		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE) || Mouse.isButtonDown(0)) {
+		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE) || Mouse.isButtonDown(0) || ((defaultController != null) && defaultController.isButtonPressed(0))) {
 			if (System.currentTimeMillis() - lastShotTime > 200) {
 				bullets.add(new Bullet(shootX + 8, shootY, 1));
 				bullets.add(new Bullet(shootX + -8, shootY, 1));
@@ -524,23 +567,58 @@ public class SuperNova {
 
 		switch (gameState) {
 
-		case RUNNING:
-			processRunningStateRender();
-			break;
-		case GAME_OVER:
-			processGameOverRender();
-			break;
-		case MENU:
-			processMenuRender();
-			break;
-		case LEVEL_END:
-			processLevelEndRender();
-			break;
-		default:
-			break;
+			case RUNNING:
+				processRunningStateRender();
+				break;
+			case PAUSE:
+				processPauseRender();
+				break;
+			case GAME_OVER:
+				processGameOverRender();
+				break;
+			case MENU:
+				processMenuRender();
+				break;
+			case LEVEL_END:
+				processLevelEndRender();
+				break;
+			default:
+				break;
 
 		}
 
+	}
+
+	private static void processPauseRender() {
+
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+		GL11.glColor3f(1.0f, 1.0f, 1.0f);
+
+
+		GL11.glPushMatrix();
+		GL11.glTranslatef(0, -yOffset, 0);
+		GL11.glCallList(displayListId);
+		GL11.glPopMatrix();
+
+		for (Bullet bullet : bullets) {
+			bullet.draw();
+		}
+		for (Enemy enemy : enemies) {
+			enemy.draw();
+		}
+
+		ship.draw();
+		scoreText.draw();
+		energyText.draw();
+		offsetText.draw();
+		pauseText.draw();
+
+		for (IDrawable drawable : drawables) {
+			drawable.draw();
+		}
+		
 	}
 
 	private static void processLevelEndRender() {
@@ -661,8 +739,8 @@ public class SuperNova {
 
 		}
 
-		float fadeInSpeed = 0.01f;
-		float fadeOutSpeed = 0.005f;
+		float fadeInSpeed = 0.001f;
+		float fadeOutSpeed = 0.001f;
 
 		for (Iterator<IFadeable> it = fadeables.iterator(); it.hasNext();) {
 

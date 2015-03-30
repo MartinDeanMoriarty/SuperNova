@@ -119,7 +119,7 @@
 		<copydir src="./start" dest="${dist}/lib/"/>
 
 		<zip destfile="${dist}/supernova-bin-${version}.zip">
-			<zipfileset dir="${dist}/lib/" prefix="blackboard-bin-${version}" />
+			<zipfileset dir="${dist}/lib/" prefix="supernova-bin-${version}" />
 		</zip>
 
 	</target>

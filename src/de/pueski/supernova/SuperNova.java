@@ -71,8 +71,6 @@ public class SuperNova {
 
 	static Random random;
 
-	static int energy = 100;
-
 	static long frameTime;
 
 	static long startTime;
@@ -291,6 +289,7 @@ public class SuperNova {
 			musicPlayer.nextSong();
 			score = 0;
 			ship.setEnergy(100);
+			energyDisplay.setValue(ship.getEnergy());
 			energyDisplay.setBlinking(false);
 			energyDisplay.setValue(100);
 			scoreText.setText("Score : " + score);
@@ -321,6 +320,7 @@ public class SuperNova {
 			enemies.clear();
 			bullets.clear();
 			gameState = GameState.MENU;
+			energyDisplay.setValue(ship.getEnergy());
 		}
 
 		yOffset += velocity;
@@ -353,7 +353,7 @@ public class SuperNova {
 			enemies.add(new Enemy(WIDTH * f, HEIGHT, 4, 1000 + t));
 			lastEnemyTime = System.currentTimeMillis();
 		}
-		if (System.currentTimeMillis() - lastEntityTime > 5000l && System.currentTimeMillis() - startTime > 5000) {
+		if (System.currentTimeMillis() - lastEntityTime > 20000l && System.currentTimeMillis() - startTime > 5000) {
 			float f = random.nextFloat();
 			entities.add(new Ammo(WIDTH * f, HEIGHT, 4));
 			lastEntityTime = System.currentTimeMillis();

@@ -3,6 +3,8 @@ package de.pueski.supernova;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Controller;
@@ -63,12 +65,18 @@ public class SuperNova {
 
 	static Ship ship;
 
+	static int sequence = 0;
+	
 	private static final ArrayList<Bullet> bullets = new ArrayList<Bullet>();
 	private static final ArrayList<Enemy> enemies = new ArrayList<Enemy>();
 	private static final ArrayList<Entity>entities = new ArrayList<Entity>();
 	private static final ArrayList<IExplodable> explodables = new ArrayList<IExplodable>();
 	private static final ArrayList<IDrawable> drawables = new ArrayList<IDrawable>();
 	private static final ArrayList<IFadeable> fadeables = new ArrayList<IFadeable>();
+
+	private static final int MAX_SEQUENCES = 2;
+	
+	private static final Timer sequenceTimer = new Timer();
 
 	static Random random;
 
@@ -106,7 +114,7 @@ public class SuperNova {
 
 	private static int energySource;
 
-	private static boolean soundEnabled = true;
+	private static boolean soundEnabled = false;
 	
 	private SuperNova() {
 	}
@@ -146,6 +154,19 @@ public class SuperNova {
 		initHUD();		
 		drawBackground();
 		
+		sequenceTimer.schedule(new TimerTask() {
+
+			@Override
+			public void run() {
+				if (sequence < 13) {
+					sequence++;
+				}
+				else {
+					sequence = 0;
+				}
+			}
+			
+		}, 0, 1000);
 	}
 
 	private static void initGL() {
@@ -352,7 +373,9 @@ public class SuperNova {
 		moveEntities();
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
-			musicPlayer.nextSong();
+			if (soundEnabled) {
+				musicPlayer.nextSong();				
+			}
 			enemies.clear();
 			bullets.clear();
 			gameState = GameState.MENU;
@@ -383,12 +406,51 @@ public class SuperNova {
 	}
 
 	private static void createRandomEntities() {
-		if (System.currentTimeMillis() - lastEnemyTime > 500 && System.currentTimeMillis() - startTime > 5000) {
-			float f = random.nextFloat();
-			long t = random.nextInt(500);
-			enemies.add(new Enemy(WIDTH * f, HEIGHT, 4, 1000 + t));
-			lastEnemyTime = System.currentTimeMillis();
+			
+		switch (sequence) {
+			case 0:
+			case 2:
+			case 4:
+			case 8:				
+				// totally random
+				if (System.currentTimeMillis() - lastEnemyTime > 500 && System.currentTimeMillis() - startTime > 5000) {								
+					float f = random.nextFloat();
+					long t = random.nextInt(500);
+					enemies.add(new Enemy(WIDTH * f, HEIGHT, 4, 1000 + t));
+					lastEnemyTime = System.currentTimeMillis();
+				}
+				break;				
+			case 3:
+			case 6:
+			case 9:
+			case 12:			
+				// one line horizontal
+				if (System.currentTimeMillis() - lastEnemyTime > 4000 && System.currentTimeMillis() - startTime > 2) {								
+					for (int i = 1; i < 6; i++) {
+						long t = random.nextInt(500);
+						enemies.add(new Enemy(i * 100, HEIGHT, 4, 1000 + t));				
+					}
+					lastEnemyTime = System.currentTimeMillis();
+				}
+				break;		
+			case 1:
+			case 5:
+			case 7:				
+			case 10:
+			case 11:
+			case 13:	
+				// one line 45 degrees
+				if (System.currentTimeMillis() - lastEnemyTime > 4000 && System.currentTimeMillis() - startTime > 2) {
+					for (int i = 1; i < 6; i++) {
+						long t = random.nextInt(500);
+						enemies.add(new Enemy(i * 100, HEIGHT + i * 50, 4, 1000 + t));
+					}
+					lastEnemyTime = System.currentTimeMillis();
+				}				
+				break;
+			default :  break;
 		}
+		
 		if (System.currentTimeMillis() - lastAmmoTime > 20000l && System.currentTimeMillis() - startTime > 5000) {
 			float f = random.nextFloat();
 			entities.add(new Ammo(WIDTH * f, HEIGHT, 4));
@@ -587,7 +649,9 @@ public class SuperNova {
 				else {
 					it.remove();
 					explodables.add(enemy);
-					sm.playEffect(explosionSource);
+					if (soundEnabled) {
+						sm.playEffect(explosionSource);						
+					}
 					enemiesShot++;
 					energyDisplay.setValue(ship.getEnergy());
 					if (ship.getEnergy() == 20) {

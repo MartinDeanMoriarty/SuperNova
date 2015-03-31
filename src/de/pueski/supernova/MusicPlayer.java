@@ -5,8 +5,11 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Properties;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
@@ -19,7 +22,19 @@ public class MusicPlayer {
 	private InputStream songInput;	
 	private volatile Player player; 
 	
+	private Timer timer;
+	
 	public MusicPlayer() {		
+		
+		timer = new Timer(true);		
+		timer.scheduleAtFixedRate(new TimerTask() {			
+			@Override
+			public void run() {
+				if (player != null && player.isComplete()) {
+					nextSong();
+				}				
+			}
+		}, new Date(), 10000);
 		
 		try {
 			Properties p = new Properties();
@@ -133,8 +148,10 @@ public class MusicPlayer {
 				catch (JavaLayerException e) {
 					e.printStackTrace();
 				}
+
 			}
 		}).start();		
+		
 	}
 	
 	public String getCurrentSongName() {

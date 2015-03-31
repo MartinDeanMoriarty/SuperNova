@@ -12,6 +12,8 @@ public class Enemy extends Entity implements IExplodable {
 
 	private long index;
 
+	
+	
 	private int texId;
 
 	private float x_i = 1f / 8;
@@ -20,6 +22,8 @@ public class Enemy extends Entity implements IExplodable {
 	private long lastShotTime;
 
 	private long shotInterval;
+	
+	private float rot = 0.0f;
 	
 	private int explosionTexId;
 
@@ -67,9 +71,10 @@ public class Enemy extends Entity implements IExplodable {
 	public void draw() {
 		GL11.glColor3f(1.0f, 1.0f, 1.0f);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		GL11.glPushMatrix();
+		GL11.glPushMatrix();		
 		GL11.glTranslatef(xLoc, yLoc, 0);
 		GL11.glScalef(1.5f, 1.5f, 0.0f);
+		GL11.glRotatef(rot, 0.0f, 1.0f, 0.0f);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texId);
 		GL11.glBegin(GL11.GL_POLYGON);
 		GL11.glTexCoord2f(0f, 0f);
@@ -82,7 +87,7 @@ public class Enemy extends Entity implements IExplodable {
 		GL11.glVertex2f(-size, size);
 		GL11.glEnd();
 		GL11.glPopMatrix();
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		GL11.glDisable(GL11.GL_TEXTURE_2D);		
 	}
 
 	public void drawExplosion(int frame) {

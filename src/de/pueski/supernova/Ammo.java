@@ -2,7 +2,7 @@ package de.pueski.supernova;
 
 import java.io.InputStream;
 
-import org.lwjgl.opengl.GL11;
+import static org.lwjgl.opengl.GL11.*;
 
 import de.pueski.supernova.tools.TextureUtil;
 
@@ -10,10 +10,13 @@ public class Ammo extends Entity {
 
 	private static final float speed = 2.0f;
 	
-	private int texId;
-	
+	private int texId;	
 	private long index; 
-		
+
+	private int amount = 1000;
+
+	private float rot = 0.0f;
+	
 	public Ammo(float xLoc, float yLoc, int direction) {
 		this.xLoc = xLoc;
 		this.yLoc = yLoc;
@@ -43,26 +46,41 @@ public class Ammo extends Entity {
 	}
 	
 	public void draw() {
-		GL11.glColor3f(1.0f,1.0f,1.0f);
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		GL11.glPushMatrix();
-		GL11.glTranslatef(xLoc, yLoc, 0);	
-		GL11.glRotatef(90.0f, 0.0f,0.0f,1.0f);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texId);
-		GL11.glBegin(GL11.GL_POLYGON);
-		GL11.glVertex2f(-size, -size);
-		GL11.glTexCoord2f(0f, 0f);
-		GL11.glVertex2f(size, -size);
-		GL11.glTexCoord2f(1f, 0f);
-		GL11.glVertex2f(size, size);
-		GL11.glTexCoord2f(1f, 1f);
-		GL11.glVertex2f(-size, size);
-		GL11.glTexCoord2f(0f, 1f);
-		GL11.glEnd();
-		GL11.glPopMatrix();
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
 
+		glColor3f(1.0f,1.0f,1.0f);
+		
+		glEnable(GL_TEXTURE_2D);	
+		
+		glPushMatrix();
+		glTranslatef(xLoc, yLoc, -1);		
+		glRotatef(90.0f, 0.0f,0.0f,1.0f);
+		glRotatef(rot, 0.0f, 0.0f, 1.0f);
+		glBindTexture(GL_TEXTURE_2D, texId);
+		glBegin(GL_POLYGON);
+		glVertex3f(-size, -size, 0f);
+		glTexCoord2f(0f, 0f);
+		glVertex3f(size, -size, 0f);
+		glTexCoord2f(1f, 0f);
+		glVertex3f(size, size,  0f);
+		glTexCoord2f(1f, 1f);
+		glVertex3f(-size, size, 0f);
+		glTexCoord2f(0f, 1f);
+		glEnd();
+		
+		glPopMatrix();
+		
+		glDisable(GL_TEXTURE_2D);
+
+		rot += 1.0f;
+		
 	}
 
+	public int getAmount() {
+		return amount;
+	}
+
+	public void setAmount(int amount) {
+		this.amount = amount;
+	}
 	
 }

@@ -162,4 +162,14 @@ public class Ship extends Entity implements IExplodable, IDrawable {
 	public void fly() {	
 	}
 
+	public void addEnergy(Energy e) {
+		
+		energy += e.getAmount();
+		
+		if (energy > 100) {
+			energy = 100;
+		}
+		
+	}
+
 }

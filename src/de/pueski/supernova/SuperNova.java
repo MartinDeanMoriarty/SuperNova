@@ -27,7 +27,7 @@ public class SuperNova {
 	private static final int HEIGHT = 600;
 	private static final int FRAMERATE = 100;
 	private static final int MAX_AMMO = 1000;
-	
+
 	private static boolean finished;
 
 	static float velocity = 1.0f;
@@ -37,7 +37,7 @@ public class SuperNova {
 
 	static float xPos = 0;
 	static float yPos = 0;
-	
+
 	static int ammo = MAX_AMMO;
 
 	static int texId1;
@@ -60,22 +60,20 @@ public class SuperNova {
 	static long lastEnemyShootTime;
 
 	static Controller defaultController;
-	
+
 	static int enemiesShot = 0;
 
 	static Ship ship;
 
 	static int sequence = 0;
-	
+
 	private static final ArrayList<Bullet> bullets = new ArrayList<Bullet>();
 	private static final ArrayList<Enemy> enemies = new ArrayList<Enemy>();
-	private static final ArrayList<Entity>entities = new ArrayList<Entity>();
+	private static final ArrayList<Entity> entities = new ArrayList<Entity>();
 	private static final ArrayList<IExplodable> explodables = new ArrayList<IExplodable>();
 	private static final ArrayList<IDrawable> drawables = new ArrayList<IDrawable>();
 	private static final ArrayList<IFadeable> fadeables = new ArrayList<IFadeable>();
 
-	private static final int MAX_SEQUENCES = 2;
-	
 	private static final Timer sequenceTimer = new Timer();
 
 	static Random random;
@@ -83,7 +81,7 @@ public class SuperNova {
 	static long frameTime;
 
 	static long startTime;
-	
+
 	static SoundManager sm;
 
 	static int laserSource;
@@ -97,7 +95,7 @@ public class SuperNova {
 	static Text nowPlaying;
 	static Text songName;
 	static Text pauseText;
-	
+
 	static int score;
 
 	static MusicPlayer musicPlayer;
@@ -115,7 +113,7 @@ public class SuperNova {
 	private static int energySource;
 
 	private static boolean soundEnabled = false;
-	
+
 	private SuperNova() {
 	}
 
@@ -127,17 +125,17 @@ public class SuperNova {
 	}
 
 	private static void init() throws Exception {
-		
+
 		Display.setDisplayMode(new DisplayMode(WIDTH, HEIGHT));
 		Display.setTitle("SuperNova");
 		Display.setFullscreen(true);
 		// Display.setVSyncEnabled(true);
 		Display.create();
-		
+
 		initInput();
 		initGL();
 		loadTextures();
-		
+
 		lastShotTime = System.currentTimeMillis();
 		lastEnemyTime = System.currentTimeMillis();
 		lastEnemyShootTime = System.currentTimeMillis();
@@ -148,25 +146,26 @@ public class SuperNova {
 		yPos = ship.getYLoc();
 
 		if (soundEnabled) {
-			initSound();			
+			initSound();
 		}
-		
-		initHUD();		
+
+		initHUD();
 		drawBackground();
-		
+
 		sequenceTimer.schedule(new TimerTask() {
 
 			@Override
 			public void run() {
-				if (sequence < 13) {
+				if (sequence < 2) {
 					sequence++;
 				}
 				else {
 					sequence = 0;
 				}
+				System.out.println("sequence : " + sequence);
 			}
-			
-		}, 0, 1000);
+
+		}, 0, 10000);
 	}
 
 	private static void initGL() {
@@ -184,13 +183,13 @@ public class SuperNova {
 		Keyboard.create();
 		Mouse.create();
 		Mouse.setGrabbed(true);
-		Controllers.create();		
+		Controllers.create();
 		Controllers.poll();
-		
-		for (int i = 0; i < Controllers.getControllerCount();i++) {
-			Controller controller = Controllers.getController(i);			
+
+		for (int i = 0; i < Controllers.getControllerCount(); i++) {
+			Controller controller = Controllers.getController(i);
 			if (controller.getName().startsWith("XBOX")) {
-				defaultController = controller;				
+				defaultController = controller;
 			}
 		}
 	}
@@ -202,8 +201,8 @@ public class SuperNova {
 		explosionSource = sm.addSound("explosion.wav");
 		energyWarningSource = sm.addSound("energywarning.wav");
 		reloadSource = sm.addSound("reload.wav");
-		energySource = sm.addSound("energy.wav"); 
-		
+		energySource = sm.addSound("energy.wav");
+
 		sm.adjustAllVolumes(0.4f);
 		sm.adjustVolume(2, 2.0f);
 
@@ -218,10 +217,10 @@ public class SuperNova {
 		nowPlaying = new Text(10, 40, "Now playing");
 		songName = new Text(10, 20, "");
 		pauseText = new Text(280, 300, "Pause");
-		
+
 		nowPlaying.setOpacity(0.0f);
 		songName.setOpacity(0.0f);
-		
+
 		energyDisplay = new GLBarGraphDisplay(100, 1.5f, 180f, 405f, true, true);
 		energyDisplay.setScale(2.0f);
 		energyDisplay.setYscale(1.4f);
@@ -231,7 +230,7 @@ public class SuperNova {
 		drawables.add(energyDisplay);
 	}
 
-	private static void drawBackground() {		
+	private static void drawBackground() {
 		displayListId = GL11.glGenLists(1);
 		GL11.glNewList(displayListId, GL11.GL_COMPILE);
 		GL11.glPushMatrix();
@@ -263,7 +262,7 @@ public class SuperNova {
 
 		if (soundEnabled) {
 			musicPlayer.start();
-			songName.setText(musicPlayer.getCurrentSongName());			
+			songName.setText(musicPlayer.getCurrentSongName());
 		}
 
 		do {
@@ -290,12 +289,13 @@ public class SuperNova {
 				}
 			}
 
-		} while (true);
+		}
+		while (true);
 	}
 
 	private static void cleanup() {
 		if (soundEnabled) {
-			sm.destroy();			
+			sm.destroy();
 		}
 		Display.destroy();
 		Keyboard.destroy();
@@ -307,29 +307,29 @@ public class SuperNova {
 
 		switch (gameState) {
 
-		case RUNNING:
-			processRunningStateLogic();
-			break;
-		case PAUSE: 
-			processPauseLogic();
-			break;
-		case GAME_OVER:
-			processGameOverLogic();
-			break;
-		case MENU:
-			processMenuLogic();
-			break;
-		case LEVEL_END:
-			processLevelEndLogic();
-			break;
-		default:
-			break;
+			case RUNNING:
+				processRunningStateLogic();
+				break;
+			case PAUSE:
+				processPauseLogic();
+				break;
+			case GAME_OVER:
+				processGameOverLogic();
+				break;
+			case MENU:
+				processMenuLogic();
+				break;
+			case LEVEL_END:
+				processLevelEndLogic();
+				break;
+			default:
+				break;
 		}
 
 	}
 
-	private static void processPauseLogic() {		
-		if (Keyboard.isKeyDown(Keyboard.KEY_P)) {			
+	private static void processPauseLogic() {
+		if (Keyboard.isKeyDown(Keyboard.KEY_P)) {
 			gameState = GameState.RUNNING;
 			Keyboard.enableRepeatEvents(true);
 		}
@@ -342,7 +342,7 @@ public class SuperNova {
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE) || ((defaultController != null) && defaultController.isButtonPressed(0))) {
 			if (soundEnabled) {
-				musicPlayer.nextSong();				
+				musicPlayer.nextSong();
 			}
 			score = 0;
 			ship.setEnergy(100);
@@ -372,9 +372,10 @@ public class SuperNova {
 		moveEnemies();
 		moveEntities();
 
-		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
+		if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
+			Keyboard.poll();
 			if (soundEnabled) {
-				musicPlayer.nextSong();				
+				musicPlayer.nextSong();
 			}
 			enemies.clear();
 			bullets.clear();
@@ -406,39 +407,28 @@ public class SuperNova {
 	}
 
 	private static void createRandomEntities() {
-			
+
 		switch (sequence) {
 			case 0:
-			case 2:
-			case 4:
-			case 8:				
 				// totally random
-				if (System.currentTimeMillis() - lastEnemyTime > 500 && System.currentTimeMillis() - startTime > 5000) {								
+				if (System.currentTimeMillis() - lastEnemyTime > 500 && System.currentTimeMillis() - startTime > 5000) {
 					float f = random.nextFloat();
 					long t = random.nextInt(500);
 					enemies.add(new Enemy(WIDTH * f, HEIGHT, 4, 1000 + t));
 					lastEnemyTime = System.currentTimeMillis();
 				}
-				break;				
-			case 3:
-			case 6:
-			case 9:
-			case 12:			
+				break;
+			case 1:
 				// one line horizontal
-				if (System.currentTimeMillis() - lastEnemyTime > 4000 && System.currentTimeMillis() - startTime > 2) {								
+				if (System.currentTimeMillis() - lastEnemyTime > 4000 && System.currentTimeMillis() - startTime > 2) {
 					for (int i = 1; i < 6; i++) {
 						long t = random.nextInt(500);
-						enemies.add(new Enemy(i * 100, HEIGHT, 4, 1000 + t));				
+						enemies.add(new Enemy(i * 100, HEIGHT, 4, 1000 + t));
 					}
 					lastEnemyTime = System.currentTimeMillis();
 				}
-				break;		
-			case 1:
-			case 5:
-			case 7:				
-			case 10:
-			case 11:
-			case 13:	
+				break;
+			case 2:
 				// one line 45 degrees
 				if (System.currentTimeMillis() - lastEnemyTime > 4000 && System.currentTimeMillis() - startTime > 2) {
 					for (int i = 1; i < 6; i++) {
@@ -446,11 +436,12 @@ public class SuperNova {
 						enemies.add(new Enemy(i * 100, HEIGHT + i * 50, 4, 1000 + t));
 					}
 					lastEnemyTime = System.currentTimeMillis();
-				}				
+				}
 				break;
-			default :  break;
+			default:
+				break;
 		}
-		
+
 		if (System.currentTimeMillis() - lastAmmoTime > 20000l && System.currentTimeMillis() - startTime > 5000) {
 			float f = random.nextFloat();
 			entities.add(new Ammo(WIDTH * f, HEIGHT, 4));
@@ -461,11 +452,11 @@ public class SuperNova {
 			entities.add(new Energy(WIDTH * f, HEIGHT, 4));
 			lastEnergyTime = System.currentTimeMillis();
 		}
-		
-	}	
-	
+
+	}
+
 	private static void processRunningStateLogic() {
-		
+
 		createRandomEntities();
 		enemiesShoot();
 
@@ -476,7 +467,7 @@ public class SuperNova {
 			enemies.clear();
 			bullets.clear();
 			if (soundEnabled) {
-				musicPlayer.nextSong();				
+				musicPlayer.nextSong();
 			}
 		}
 
@@ -492,11 +483,11 @@ public class SuperNova {
 			xPos -= 5.0f;
 		if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT))
 			xPos += 5.0f;
-		if (soundEnabled) {			
+		if (soundEnabled) {
 			if (Keyboard.isKeyDown(Keyboard.KEY_E)) {
 				sm.playEffect(energyWarningSource);
 			}
-			if (Keyboard.isKeyDown(Keyboard.KEY_N)  || ((defaultController != null) && defaultController.isButtonPressed(4))) {
+			if (Keyboard.isKeyDown(Keyboard.KEY_N) || ((defaultController != null) && defaultController.isButtonPressed(4))) {
 				musicPlayer.previousSong();
 				songName.setText(musicPlayer.getCurrentSongName());
 				nowPlaying.setMode(Fade.IN);
@@ -504,7 +495,7 @@ public class SuperNova {
 				fadeables.add(nowPlaying);
 				fadeables.add(songName);
 			}
-			if (Keyboard.isKeyDown(Keyboard.KEY_M)  || ((defaultController != null) && defaultController.isButtonPressed(5))) {
+			if (Keyboard.isKeyDown(Keyboard.KEY_M) || ((defaultController != null) && defaultController.isButtonPressed(5))) {
 				musicPlayer.nextSong();
 				songName.setText(musicPlayer.getCurrentSongName());
 				nowPlaying.setMode(Fade.IN);
@@ -518,29 +509,29 @@ public class SuperNova {
 				explodables.add(ship);
 				ship.setVisible(false);
 				if (soundEnabled) {
-					sm.playEffect(explosionSource);					
+					sm.playEffect(explosionSource);
 				}
 			}
 		}
-		
+
 		if (Keyboard.isKeyDown(Keyboard.KEY_P)) {
 			Keyboard.enableRepeatEvents(false);
-			gameState = GameState.PAUSE;			
+			gameState = GameState.PAUSE;
 		}
-		
+
 		if (defaultController != null) {
 			if (Math.abs(defaultController.getXAxisValue()) > 0.3) {
 				xPos += defaultController.getXAxisValue() * 5;
-				
+
 			}
 			if (Math.abs(defaultController.getYAxisValue()) > 0.3) {
 				yPos -= defaultController.getYAxisValue() * 5;
 			}
-			
+
 		}
 		else {
 			xPos = Mouse.getX();
-			yPos = Mouse.getY();			
+			yPos = Mouse.getY();
 		}
 
 		if (xPos < ship.getSize()) {
@@ -556,22 +547,22 @@ public class SuperNova {
 		if (yPos > WIDTH - ship.getSize()) {
 			yPos = WIDTH - ship.getSize();
 		}
-		
+
 		shootX = xPos;
 		shootY = yPos;
 
 		moveBullets();
 		moveEnemies();
 		moveEntities();
-		
+
 		checkBulletColission();
 
 		// Am I hit by an enemy ?
 
 		checkEnemyCollision();
-		
+
 		// Any entity hit??
-		
+
 		checkEntityCollision();
 
 		yOffset += velocity;
@@ -592,36 +583,36 @@ public class SuperNova {
 	}
 
 	private static void checkEntityCollision() {
-		for (Iterator<Entity> it = entities.iterator();it.hasNext();) {
-			
+		for (Iterator<Entity> it = entities.iterator(); it.hasNext();) {
+
 			Entity entity = it.next();
-			
+
 			if (entity.collides(ship)) {
-				
+
 				it.remove();
-				
+
 				if (entity instanceof Ammo) {
-					
-					Ammo a = (Ammo)entity;					
+
+					Ammo a = (Ammo) entity;
 					ammo += a.getAmount();
-					
-					ammoText.setText("Ammo "+ ammo);
+
+					ammoText.setText("Ammo " + ammo);
 					if (soundEnabled && !sm.isPlayingSound()) {
-						sm.playEffect(reloadSource);						
+						sm.playEffect(reloadSource);
 					}
 				}
 				else if (entity instanceof Energy) {
-					
-					Energy e = (Energy)entity;					
+
+					Energy e = (Energy) entity;
 					ship.addEnergy(e);
 					energyDisplay.setValue(ship.getEnergy());
 					if (soundEnabled && !sm.isPlayingSound()) {
-						sm.playEffect(energySource);											
+						sm.playEffect(energySource);
 					}
 				}
-				
+
 			}
-			
+
 		}
 	}
 
@@ -635,7 +626,7 @@ public class SuperNova {
 				if (!ship.hit()) {
 					if (!explodables.contains(ship)) {
 						if (soundEnabled) {
-							sm.playEffect(explosionSource);							
+							sm.playEffect(explosionSource);
 						}
 						explodables.add(ship);
 						gameOverText.setText("Game over! Score : " + score);
@@ -650,13 +641,13 @@ public class SuperNova {
 					it.remove();
 					explodables.add(enemy);
 					if (soundEnabled) {
-						sm.playEffect(explosionSource);						
+						sm.playEffect(explosionSource);
 					}
 					enemiesShot++;
 					energyDisplay.setValue(ship.getEnergy());
 					if (ship.getEnergy() == 20) {
 						if (soundEnabled) {
-							sm.playEffect(energyWarningSource);							
+							sm.playEffect(energyWarningSource);
 						}
 					}
 				}
@@ -667,8 +658,8 @@ public class SuperNova {
 	private static void checkBulletColission() {
 		for (Iterator<Bullet> bulletIt = bullets.iterator(); bulletIt.hasNext();) {
 
-			Bullet bullet = bulletIt.next();	
-			
+			Bullet bullet = bulletIt.next();
+
 			// Any enemy hit ?
 			for (Iterator<Enemy> it = enemies.iterator(); it.hasNext();) {
 				Enemy enemy = it.next();
@@ -677,7 +668,7 @@ public class SuperNova {
 						it.remove();
 						explodables.add(enemy);
 						if (soundEnabled) {
-							sm.playEffect(explosionSource);							
+							sm.playEffect(explosionSource);
 						}
 						enemiesShot++;
 						score = enemiesShot * 1000;
@@ -692,7 +683,7 @@ public class SuperNova {
 					if (ship.getEnergy() == 0) {
 						if (!explodables.contains(ship)) {
 							if (soundEnabled) {
-								sm.playEffect(explosionSource);								
+								sm.playEffect(explosionSource);
 							}
 							explodables.add(ship);
 							gameOverText.setText("Game over! Score " + score);
@@ -709,7 +700,7 @@ public class SuperNova {
 					energyDisplay.setValue(ship.getEnergy());
 					if (ship.getEnergy() == 20) {
 						if (soundEnabled) {
-							sm.playEffect(energyWarningSource);							
+							sm.playEffect(energyWarningSource);
 						}
 					}
 				}
@@ -746,18 +737,18 @@ public class SuperNova {
 
 		}
 	}
-	
+
 	private static void moveEntities() {
 		for (Iterator<Entity> it = entities.iterator(); it.hasNext();) {
-			
+
 			Entity entity = it.next();
-			
+
 			if (entity.getYLoc() > 600 && entity.getYLoc() < 0) {
 				it.remove();
 			}
 			else {
 				entity.fly();
-			}			
+			}
 		}
 	}
 
@@ -775,7 +766,7 @@ public class SuperNova {
 					}
 				}
 				ammo--;
-				ammoText.setText("Ammo " + ammo);				
+				ammoText.setText("Ammo " + ammo);
 			}
 		}
 	}
@@ -813,7 +804,6 @@ public class SuperNova {
 		GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		GL11.glColor3f(1.0f, 1.0f, 1.0f);
 
-
 		GL11.glPushMatrix();
 		GL11.glTranslatef(0, -yOffset, 0);
 		GL11.glCallList(displayListId);
@@ -829,7 +819,6 @@ public class SuperNova {
 			entity.draw();
 		}
 
-
 		ship.draw();
 		scoreText.draw();
 		ammoText.draw();
@@ -838,7 +827,7 @@ public class SuperNova {
 		for (IDrawable drawable : drawables) {
 			drawable.draw();
 		}
-		
+
 	}
 
 	private static void processLevelEndRender() {
@@ -965,10 +954,10 @@ public class SuperNova {
 
 		ammoText.draw();
 		scoreText.draw();
-		
+
 		if (soundEnabled) {
 			nowPlaying.draw();
-			songName.draw();			
+			songName.draw();
 		}
 
 		for (IDrawable drawable : drawables) {

@@ -84,7 +84,6 @@ public class SoundManager {
 	 *            Buffer index to play gotten from addSound
 	 */
 	public void playEffect(int buffer) {
-		System.out.println(buffer);
 		if (soundOutput) {
 			// make sure we never choose last channel, since it is used for
 			// special sounds
@@ -206,7 +205,6 @@ public class SoundManager {
 	public void adjustAllVolumes(float volume) {
 		
 		for (int i = 0;i < sources.length;i++) {
-			System.out.println(sources[i]);
 			AL10.alSourcef(sources[i], AL10.AL_GAIN, volume);	
 		}		
 	}

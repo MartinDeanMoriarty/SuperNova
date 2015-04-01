@@ -6,6 +6,8 @@ public class Enemy extends Entity implements IExplodable {
 
 	private static final float speed = 3.0f;
 
+	private int enemyClass = 0;
+	
 	private int gridSize = 8;
 
 	private int hitPoints;
@@ -26,13 +28,27 @@ public class Enemy extends Entity implements IExplodable {
 	private int explosionTexId;
 
 	private int explosionIndex = 0;
+	
+	private float angle = 0.0f;
 
-	public Enemy(float xLoc, float yLoc, int hitPoints, long shotInterval) {
+	public Enemy(float xLoc, float yLoc, int hitPoints, long shotInterval, int enemyClass) {
 		this.xLoc = xLoc;
 		this.yLoc = yLoc;
 		this.hitPoints = hitPoints;
 		this.index = System.currentTimeMillis();
-		this.texId = TextureManager.getInstance().getTexture("alien3.png");
+		
+		if (enemyClass == 0) {
+			this.texId = TextureManager.getInstance().getTexture("alien3.png");			
+		}
+		else if (enemyClass == 1) {
+			this.texId = TextureManager.getInstance().getTexture("aliensprite.png");
+		}
+		else if (enemyClass == 2){
+			this.texId = TextureManager.getInstance().getTexture("alien4.png");
+		}
+		
+		this.enemyClass = enemyClass;
+		
 		this.explosionTexId = TextureManager.getInstance().getTexture(
 				"explosion0.png");
 		this.lastShotTime = System.currentTimeMillis();
@@ -64,7 +80,9 @@ public class Enemy extends Entity implements IExplodable {
 	}
 
 	public void fly() {
-		yLoc -= speed;
+		yLoc -= speed;		
+		xLoc += (2 * Math.sin(Math.toRadians(angle)));
+		angle += 2.0f;
 	}
 
 	public void draw() {
@@ -72,7 +90,12 @@ public class Enemy extends Entity implements IExplodable {
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glPushMatrix();
 		GL11.glTranslatef(xLoc, yLoc, 0);
-		GL11.glScalef(1.5f, 2.0f, 0.0f);
+		if (enemyClass == 2){
+			GL11.glScalef(2.0f, 2.0f, 0.0f);
+		}
+		else {			
+			GL11.glScalef(1.5f, 2.0f, 0.0f);
+		}
 		GL11.glRotatef(rot, 0.0f, 0.0f, 1.0f);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texId);
 		GL11.glBegin(GL11.GL_POLYGON);

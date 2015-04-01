@@ -15,6 +15,7 @@ public class TextureManager {
 		textures = new HashMap<String, Integer>();
 		addTexture("aliensprite.png");
 		addTexture("alien3.png");
+		addTexture("alien4.png");
 		addTexture("F5S4.png");
 		addTexture("explosion0.png");
 		addTexture("viper.png");

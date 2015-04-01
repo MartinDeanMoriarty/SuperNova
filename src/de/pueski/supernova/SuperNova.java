@@ -163,7 +163,6 @@ public class SuperNova {
 				else {
 					sequence = 0;
 				}
-				System.out.println("sequence : " + sequence);
 			}
 
 		}, 0, 10000);
@@ -213,7 +212,7 @@ public class SuperNova {
 	private static void initHUD() {
 		scoreText = new Text(10, 570, "Score " + score);
 		menuText = new Text(190, 300, "Press Space to start.");
-		gameOverText = new Text(190, 300, "Game over! Score : " + score);
+		gameOverText = new Text(190, 300, "Game over! Your Score is " + score);
 		ammoText = new Text(10, 550, "Ammo " + ammo);
 		nowPlaying = new Text(10, 40, "Now playing");
 		songName = new Text(10, 20, "");
@@ -341,7 +340,7 @@ public class SuperNova {
 
 	private static void processMenuLogic() {
 
-		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE) || ((defaultController != null) && defaultController.isButtonPressed(0))) {
+		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE) || Mouse.isButtonDown(0) || ((defaultController != null) && defaultController.isButtonPressed(0))) {
 			if (soundEnabled) {
 				musicPlayer.nextSong();
 			}
@@ -409,13 +408,15 @@ public class SuperNova {
 
 	private static void createRandomEntities() {
 
+		int enemyClass = random.nextInt(3);
+		
 		switch (sequence) {
 			case 0:
 				// totally random
 				if (System.currentTimeMillis() - lastEnemyTime > 500 && System.currentTimeMillis() - startTime > 5000) {
 					float f = random.nextFloat();
 					long t = random.nextInt(500);
-					enemies.add(new Enemy(WIDTH * f, HEIGHT, 4, 500 + t));
+					enemies.add(new Enemy(WIDTH * f, HEIGHT, 4, 500 + t, random.nextInt(3)));
 					lastEnemyTime = System.currentTimeMillis();
 				}
 				break;
@@ -424,7 +425,7 @@ public class SuperNova {
 				if (System.currentTimeMillis() - lastEnemyTime > 4000 && System.currentTimeMillis() - startTime > 2) {
 					for (int i = 1; i < 6; i++) {
 						long t = random.nextInt(500);
-						enemies.add(new Enemy(i * 100, HEIGHT, 4, 500 + t));
+						enemies.add(new Enemy(i * 100, HEIGHT, 4, 500 + t, enemyClass));
 					}
 					lastEnemyTime = System.currentTimeMillis();
 				}
@@ -434,7 +435,7 @@ public class SuperNova {
 				if (System.currentTimeMillis() - lastEnemyTime > 4000 && System.currentTimeMillis() - startTime > 2) {
 					for (int i = 1; i < 6; i++) {
 						long t = random.nextInt(500);
-						enemies.add(new Enemy(i * 100, HEIGHT + i * 50, 4, 500 + t));
+						enemies.add(new Enemy(i * 100, HEIGHT + i * 50, 4, 500 + t, enemyClass));
 					}
 					lastEnemyTime = System.currentTimeMillis();
 				}
@@ -468,18 +469,18 @@ public class SuperNova {
 			}
 		}
 
-		if (Keyboard.isKeyDown(Keyboard.KEY_UP)) {
+		if (Keyboard.isKeyDown(Keyboard.KEY_W) || Keyboard.isKeyDown(Keyboard.KEY_UP)) {
 			yPos += 2.0f;
-			velocity += 0.05f;
 		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
+		if (Keyboard.isKeyDown(Keyboard.KEY_S) || Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
 			yPos -= 2.0f;
-			velocity -= 0.05f;
 		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_LEFT))
+		if (Keyboard.isKeyDown(Keyboard.KEY_A) || Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
 			xPos -= 5.0f;
-		if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT))
+		}			
+		if (Keyboard.isKeyDown(Keyboard.KEY_D) || Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
 			xPos += 5.0f;
+		}			
 		if (soundEnabled) {
 			if (Keyboard.isKeyDown(Keyboard.KEY_E)) {
 				sm.playEffect(energyWarningSource);
@@ -526,10 +527,10 @@ public class SuperNova {
 			}
 
 		}
-		else {
-			xPos = Mouse.getX();
-			yPos = Mouse.getY();
-		}
+//		else {
+//			xPos = Mouse.getX();
+//			yPos = Mouse.getY();
+//		}
 
 		if (xPos < ship.getSize()) {
 			xPos = ship.getSize();

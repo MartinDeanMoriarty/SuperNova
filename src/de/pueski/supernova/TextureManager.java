@@ -17,6 +17,7 @@ public class TextureManager {
 		addTexture("alien3.png");
 		addTexture("alien4.png");
 		addTexture("F5S4.png");
+		addTexture("destroyer.png");
 		addTexture("explosion0.png");
 		addTexture("viper.png");
 		addTexture("viper_shadow.png");
@@ -27,19 +28,13 @@ public class TextureManager {
 		addTexture("laser_blue.png");
 		addTexture("laser_green.png");
 		addTexture("laser_violet.png");
-		addTexture("1.png");
-		addTexture("2.png");
-		addTexture("3.png");
-		addTexture("4.png");
-		addTexture("5.png");
-		addTexture("6.png");
 		addTexture("mars_01.png");
 		addTexture("mars_02.png");
 		addTexture("mars_03.png");
 		addTexture("mars_04.png");
 		addTexture("mars_05.png");
 		addTexture("mars_06.png");
-
+		addTexture("healthbar.png");
 	}
 	
 	static TextureManager getInstance() {

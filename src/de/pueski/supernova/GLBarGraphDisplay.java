@@ -43,9 +43,13 @@ public class GLBarGraphDisplay implements IDrawable {
 
 	private float xscale = 1.0f;
 	private float yscale = 1.0f;
+	
+	private int texId;
+	
+	private float size = 20.0f; 
 
 	public GLBarGraphDisplay(int value, float stepsize, float xloc, float yloc, boolean border) {
-		this(value, stepsize, xloc, yloc, border, false);
+		this(value, stepsize, xloc, yloc, border, false);			
 	}
 
 	public GLBarGraphDisplay(int value, float stepsize, float xloc, float yloc, boolean border, boolean colored) {
@@ -57,6 +61,7 @@ public class GLBarGraphDisplay implements IDrawable {
 		this.border = border;
 		this.colored = colored;
 		time = System.currentTimeMillis();
+		this.texId = TextureManager.getInstance().getTexture("healthbar.png");
 	}
 
 	@Override
@@ -139,8 +144,29 @@ public class GLBarGraphDisplay implements IDrawable {
 		
 
 		GL11.glPopMatrix();
+		
+		GL11.glColor3f(1.0f,1.0f,1.0f);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		
+		GL11.glPushMatrix();
+		GL11.glTranslatef(460f, 580f, 0);
+		GL11.glScalef(6.1f, 1.0f, 0.0f);
+		GL11.glRotatef(180.0f, 0.0f,0.0f,1.0f);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texId);
+		GL11.glBegin(GL11.GL_POLYGON);
+		GL11.glTexCoord2f(0f, 0f);
+		GL11.glVertex2f(-size, -size);
+		GL11.glTexCoord2f(1f, 0f);
+		GL11.glVertex2f(size, -size);
+		GL11.glTexCoord2f(1f, 1f);
+		GL11.glVertex2f(size, size);
+		GL11.glTexCoord2f(0f, 1f);
+		GL11.glVertex2f(-size, size);		
+		GL11.glEnd();		
+		GL11.glPopMatrix();
 
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		
 	}
 
 	/**

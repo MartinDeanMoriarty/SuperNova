@@ -4,11 +4,11 @@ package de.pueski.supernova;
  * Copyright (c) 2002-2010 LWJGL Project
  * All rights reserved.
  *
- * Redistribution and use in laserSource and binary forms, with or without
+ * Redistribution and use in enemylaserSource and binary forms, with or without
  * modification, are permitted provided that the following conditions are
  * met:
  *
- * * Redistributions of laserSource code must retain the above copyright
+ * * Redistributions of enemylaserSource code must retain the above copyright
  *   notice, this list of conditions and the following disclaimer.
  *
  * * Redistributions in binary form must reproduce the above copyright
@@ -68,7 +68,7 @@ public class SoundManager {
 	/** Current index in our buffers */
 	private int bufferIndex;
 
-	/** Current index in our laserSource list */
+	/** Current index in our enemylaserSource list */
 	private int sourceIndex;
 
 	/**
@@ -89,14 +89,14 @@ public class SoundManager {
 			// special sounds
 			int channel = sources[(sourceIndex++ % (sources.length - 1))];
 			
-			// link buffer and laserSource, and play it
+			// link buffer and enemylaserSource, and play it
 			AL10.alSourcei(channel, AL10.AL_BUFFER, buffers[buffer]);
 			AL10.alSourcePlay(channel);
 		}
 	}
 
 	/**
-	 * Plays a sound on last laserSource
+	 * Plays a sound on last enemylaserSource
 	 * 
 	 * @param buffer
 	 *            Buffer index to play gotten from addSound
@@ -109,9 +109,9 @@ public class SoundManager {
 	}
 
 	/**
-	 * Whether a sound is playing on last laserSource
+	 * Whether a sound is playing on last enemylaserSource
 	 * 
-	 * @return true if a laserSource is playing right now on laserSource n
+	 * @return true if a enemylaserSource is playing right now on enemylaserSource n
 	 */
 	public boolean isPlayingSound() {
 		return AL10.alGetSourcei(sources[sources.length - 1], AL10.AL_SOURCE_STATE) == AL10.AL_PLAYING;

@@ -15,6 +15,7 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 
+import de.pueski.supernova.Bullet.BulletColor;
 import de.pueski.supernova.GLBarGraphDisplay.Orientation;
 import de.pueski.supernova.IFadeable.Fade;
 import de.pueski.supernova.tools.TextureUtil;
@@ -398,7 +399,7 @@ public class SuperNova {
 	private static void enemiesShoot() {
 		for (Enemy enemy : enemies) {
 			if (System.currentTimeMillis() - enemy.getLastShotTime() > enemy.getShotInterval()) {
-				bullets.add(new Bullet(enemy.getXLoc(), enemy.getYLoc(), -1));
+				bullets.add(new Bullet(BulletColor.VIOLET,enemy.getXLoc(), enemy.getYLoc(), -1));
 				enemy.setLastShotTime(System.currentTimeMillis());
 				if (soundEnabled && !sm.isPlayingSound())
 					sm.playEffect(laserSource);
@@ -414,7 +415,7 @@ public class SuperNova {
 				if (System.currentTimeMillis() - lastEnemyTime > 500 && System.currentTimeMillis() - startTime > 5000) {
 					float f = random.nextFloat();
 					long t = random.nextInt(500);
-					enemies.add(new Enemy(WIDTH * f, HEIGHT, 4, 1000 + t));
+					enemies.add(new Enemy(WIDTH * f, HEIGHT, 4, 500 + t));
 					lastEnemyTime = System.currentTimeMillis();
 				}
 				break;
@@ -423,7 +424,7 @@ public class SuperNova {
 				if (System.currentTimeMillis() - lastEnemyTime > 4000 && System.currentTimeMillis() - startTime > 2) {
 					for (int i = 1; i < 6; i++) {
 						long t = random.nextInt(500);
-						enemies.add(new Enemy(i * 100, HEIGHT, 4, 1000 + t));
+						enemies.add(new Enemy(i * 100, HEIGHT, 4, 500 + t));
 					}
 					lastEnemyTime = System.currentTimeMillis();
 				}
@@ -433,7 +434,7 @@ public class SuperNova {
 				if (System.currentTimeMillis() - lastEnemyTime > 4000 && System.currentTimeMillis() - startTime > 2) {
 					for (int i = 1; i < 6; i++) {
 						long t = random.nextInt(500);
-						enemies.add(new Enemy(i * 100, HEIGHT + i * 50, 4, 1000 + t));
+						enemies.add(new Enemy(i * 100, HEIGHT + i * 50, 4, 500 + t));
 					}
 					lastEnemyTime = System.currentTimeMillis();
 				}
@@ -457,10 +458,6 @@ public class SuperNova {
 
 	private static void processRunningStateLogic() {
 
-		createRandomEntities();
-		enemiesShoot();
-
-		shoot();
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
 			gameState = GameState.MENU;
@@ -551,9 +548,15 @@ public class SuperNova {
 		shootX = xPos;
 		shootY = yPos;
 
+		createRandomEntities();
+		enemiesShoot();
+		
 		moveBullets();
 		moveEnemies();
 		moveEntities();
+
+		shoot();
+
 
 		checkBulletColission();
 
@@ -713,7 +716,7 @@ public class SuperNova {
 
 			Enemy enemy = it.next();
 
-			if (enemy.getYLoc() < 0) {
+			if (enemy.getYLoc() < -50) {
 				it.remove();
 			}
 			else {
@@ -756,10 +759,10 @@ public class SuperNova {
 		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE) || Mouse.isButtonDown(0) || ((defaultController != null) && defaultController.isButtonPressed(0))) {
 			if (ammo > 0) {
 				if (System.currentTimeMillis() - lastShotTime > 200) {
-					bullets.add(new Bullet(shootX + 8, shootY, 1));
-					bullets.add(new Bullet(shootX + -8, shootY, 1));
-					bullets.add(new Bullet(shootX + 43, shootY - 8, 1));
-					bullets.add(new Bullet(shootX + -43, shootY - 8, 1));
+					bullets.add(new Bullet(BulletColor.GREEN,shootX + 8, shootY, 1));
+					bullets.add(new Bullet(BulletColor.GREEN,shootX + -8, shootY, 1));
+					bullets.add(new Bullet(BulletColor.GREEN,shootX + 43, shootY - 8, 1));
+					bullets.add(new Bullet(BulletColor.GREEN,shootX + -43, shootY - 8, 1));
 					lastShotTime = System.currentTimeMillis();
 					if (soundEnabled && !sm.isPlayingSound()) {
 						sm.playEffect(laserSource);

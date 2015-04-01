@@ -1,13 +1,27 @@
 package de.pueski.supernova;
 
-import java.io.InputStream;
+import java.util.HashMap;
 
 import org.lwjgl.opengl.GL11;
 
-import de.pueski.supernova.tools.TextureUtil;
-
 public class Bullet extends Entity {
 
+	public static enum BulletColor {
+		RED,
+		GREEN,
+		VIOLET,
+		BLUE
+	}
+
+	private static final HashMap<BulletColor, String> imageMap = new HashMap<Bullet.BulletColor, String>();
+	
+	static {
+		imageMap.put(BulletColor.RED, "laser.png");
+		imageMap.put(BulletColor.BLUE, "laser_blue.png");
+		imageMap.put(BulletColor.GREEN, "laser_green.png");
+		imageMap.put(BulletColor.VIOLET, "laser_violet.png");
+	}
+	
 	private static final float speed = 10.0f;
 	
 	private int texId;
@@ -16,12 +30,11 @@ public class Bullet extends Entity {
 	
 	private int direction;
 	
-	public Bullet(float xLoc, float yLoc, int direction) {
+	public Bullet(BulletColor color,float xLoc, float yLoc, int direction) {
 		this.xLoc = xLoc;
 		this.yLoc = yLoc;
 		this.index = System.currentTimeMillis();
-		InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("laser.png");		
-		this.texId = TextureUtil.loadTexture(is);
+		this.texId = TextureManager.getInstance().getTexture(imageMap.get(color));	
 		this.direction = direction;
 		this.size = 5.0f;
 	}

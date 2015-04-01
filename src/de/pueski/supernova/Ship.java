@@ -7,7 +7,7 @@ public class Ship extends Entity implements IExplodable, IDrawable {
 	private int energy;
 	
 	private int texId;
-	private int shadowTexId;
+	// private int shadowTexId;
 	
 	private long index; 
 	
@@ -26,8 +26,8 @@ public class Ship extends Entity implements IExplodable, IDrawable {
 		this.xLoc = xLoc;
 		this.yLoc = yLoc;
 		this.energy = 100;
-		this.texId =  TextureManager.getInstance().getTexture("viper.png");						
-		this.shadowTexId = TextureManager.getInstance().getTexture("viper_shadow.png");		
+		this.texId =  TextureManager.getInstance().getTexture("F5S4.png");						
+		//this.shadowTexId = TextureManager.getInstance().getTexture("viper_shadow.png");		
 		this.explosionTexId = TextureManager.getInstance().getTexture("explosion0.png");
 		this.visible = true;
 		this.size = 25.0f;
@@ -87,6 +87,9 @@ public class Ship extends Entity implements IExplodable, IDrawable {
 		GL11.glColor3f(1.0f,1.0f,1.0f);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		
+		
+		// shadow plane
+		/*
 		GL11.glPushMatrix();
 		GL11.glTranslatef(xLoc+1f, yLoc-10f, 0);
 		GL11.glScalef(2.0f, 2.0f, 0.0f);
@@ -103,10 +106,11 @@ public class Ship extends Entity implements IExplodable, IDrawable {
 		GL11.glVertex2f(-size, size);		
 		GL11.glEnd();		
 		GL11.glPopMatrix();
+		*/ 
 
 		GL11.glPushMatrix();
 		GL11.glTranslatef(xLoc, yLoc, 0);
-		GL11.glScalef(2.0f, 2.0f, 0.0f);
+		GL11.glScalef(1.8f, 2.5f, 0.0f);
 		GL11.glRotatef(90.0f, 0.0f,0.0f,1.0f);		
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texId);
 		GL11.glBegin(GL11.GL_POLYGON);

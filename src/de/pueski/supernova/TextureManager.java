@@ -13,19 +13,19 @@ public class TextureManager {
 	
 	private TextureManager() {
 		textures = new HashMap<String, Integer>();
-		addTexture("archimedes.png");
+		addTexture("aliensprite.png");
+		addTexture("alien3.png");
+		addTexture("F5S4.png");
 		addTexture("explosion0.png");
 		addTexture("viper.png");
 		addTexture("viper_shadow.png");
 		addTexture("spaceship_transp.png");
 		addTexture("supernova.png");
 		addTexture("starfield.png");
-//		addTexture("1_Mars.png");
-//		addTexture("2_Mars.png");
-//		addTexture("3_Mars.png");
-//		addTexture("4_Mars.png");
-//		addTexture("5_Mars.png");
-//		addTexture("6_Mars.png");
+		addTexture("laser.png");
+		addTexture("laser_blue.png");
+		addTexture("laser_green.png");
+		addTexture("laser_violet.png");
 		addTexture("1.png");
 		addTexture("2.png");
 		addTexture("3.png");

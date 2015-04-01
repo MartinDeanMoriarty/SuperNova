@@ -6,8 +6,10 @@ public class Ship extends Entity implements IExplodable, IDrawable {
 	
 	private int energy;
 	
+	private boolean shielded = true;
+	
 	private int texId;
-	// private int shadowTexId;
+	private int shadowTexId;
 	
 	private long index; 
 	
@@ -22,18 +24,31 @@ public class Ship extends Entity implements IExplodable, IDrawable {
 	float x_i = 1f / 8;
 	float y_i = 1f / 8;
 	
+	float shieldAlpha = 1.0f;
+	
+	private Fade fade = Fade.IN;
+	
+	private enum Fade {
+		IN,
+		OUT
+	}
+	
 	public Ship(float xLoc, float yLoc) {
 		this.xLoc = xLoc;
 		this.yLoc = yLoc;
 		this.energy = 100;
 		this.texId =  TextureManager.getInstance().getTexture("destroyer.png");						
-		//this.shadowTexId = TextureManager.getInstance().getTexture("viper_shadow.png");		
+		this.shadowTexId = TextureManager.getInstance().getTexture("destroyer_glow.png");		
 		this.explosionTexId = TextureManager.getInstance().getTexture("explosion0.png");
 		this.visible = true;
 		this.size = 25.0f;
 	}
 
 	public boolean hit() {
+		if (shielded) {
+			return true;
+		}
+		
 		if (energy >= 10) {
 			energy -= 10;
 			return true;
@@ -52,6 +67,9 @@ public class Ship extends Entity implements IExplodable, IDrawable {
 	 * @param energy the energy to set
 	 */
 	public void setEnergy(int energy) {
+		if (shielded) {
+			return;
+		}
 		this.energy = energy;
 	}
 	
@@ -84,15 +102,34 @@ public class Ship extends Entity implements IExplodable, IDrawable {
 		if (!visible)
 			return;
 		
-		GL11.glColor3f(1.0f,1.0f,1.0f);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		
+		if (fade.equals(Fade.IN)) {
+			
+			if (shieldAlpha < 1.0f) {
+				shieldAlpha += 0.005f;
+			}
+			else {
+				shieldAlpha = 1.0f;
+				fade = Fade.OUT;
+			}
+			
+		}
+		else {
+			if (shieldAlpha > 0) {
+				shieldAlpha -= 0.005f;
+			}
+			else {
+				shieldAlpha = 0.0f;
+				fade = Fade.IN;
+			}				
+		}
 		
-		// shadow plane
-		/*
+		
+		GL11.glColor4f(1.0f, 1.0f, 1.0f, shieldAlpha);
 		GL11.glPushMatrix();
-		GL11.glTranslatef(xLoc+1f, yLoc-10f, 0);
-		GL11.glScalef(2.0f, 2.0f, 0.0f);
+		GL11.glTranslatef(xLoc, yLoc, 0);
+		GL11.glScalef(2.0f, 2.7f, 0.0f);
 		GL11.glRotatef(180.0f, 0.0f,0.0f,1.0f);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, shadowTexId);
 		GL11.glBegin(GL11.GL_POLYGON);
@@ -105,9 +142,9 @@ public class Ship extends Entity implements IExplodable, IDrawable {
 		GL11.glTexCoord2f(0f, 1f);
 		GL11.glVertex2f(-size, size);		
 		GL11.glEnd();		
-		GL11.glPopMatrix();
-		*/ 
+		GL11.glPopMatrix(); 
 
+		GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 		GL11.glPushMatrix();
 		GL11.glTranslatef(xLoc, yLoc, 0);
 		GL11.glScalef(1.8f, 2.5f, 0.0f);
@@ -174,6 +211,14 @@ public class Ship extends Entity implements IExplodable, IDrawable {
 			energy = 100;
 		}
 		
+	}
+
+	public boolean isShielded() {
+		return shielded;
+	}
+
+	public void setShielded(boolean shielded) {
+		this.shielded = shielded;
 	}
 
 }

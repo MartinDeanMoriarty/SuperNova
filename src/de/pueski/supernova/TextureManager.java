@@ -18,6 +18,7 @@ public class TextureManager {
 		addTexture("alien4.png");
 		addTexture("F5S4.png");
 		addTexture("destroyer.png");
+		addTexture("destroyer_glow.png");
 		addTexture("explosion0.png");
 		addTexture("viper.png");
 		addTexture("viper_shadow.png");

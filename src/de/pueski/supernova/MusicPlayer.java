@@ -25,7 +25,7 @@ public class MusicPlayer {
 	private Timer timer;
 	
 	public MusicPlayer() {		
-		
+				
 		timer = new Timer(true);		
 		timer.scheduleAtFixedRate(new TimerTask() {			
 			@Override

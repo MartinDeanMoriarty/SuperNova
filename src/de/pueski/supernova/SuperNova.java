@@ -1,7 +1,10 @@
 package de.pueski.supernova;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Properties;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -194,14 +197,25 @@ public class SuperNova {
 		sm = new SoundManager();
 		sm.initialize(256);
 		shipLaserSource = sm.addSound("laser.wav");
-		enemylaserSource = sm.addSound("lasershot.wav");
-		explosionSource = sm.addSound("explosion.wav");
+		enemylaserSource = sm.addSound("zap.wav");
+		explosionSource = sm.addSound("explosion2.wav");
 		energyWarningSource = sm.addSound("energywarning.wav");
 		reloadSource = sm.addSound("reload.wav");
 		energySource = sm.addSound("tada.wav");
 
-		sm.adjustAllVolumes(0.4f);
-		sm.adjustVolume(2, 2.0f);
+		float volume = 0.4f;
+		
+		try {
+			Properties p = new Properties();
+			p.load(new FileInputStream(new File("SuperNova.properties")));
+			volume = Float.valueOf(p.getProperty("fxvolume"));
+		}
+		catch (Exception e1) {
+			e1.printStackTrace();
+		}
+		
+		sm.adjustAllVolumes(volume);
+		sm.adjustVolume(2, volume);
 
 		musicPlayer = new MusicPlayer();
 	}
@@ -349,8 +363,9 @@ public class SuperNova {
 			scoreText.setText("Score " + score);
 			gameState = GameState.RUNNING;
 			startTime = System.currentTimeMillis();
+			Keyboard.enableRepeatEvents(true);
 		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
+		if (Keyboard.isKeyDown(Keyboard.KEY_F10)) {
 			finished = true;
 		}
 
@@ -369,6 +384,8 @@ public class SuperNova {
 		moveEnemies();
 		moveEntities();
 
+		Keyboard.enableRepeatEvents(false);
+		
 		if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
 			Keyboard.poll();
 			if (SOUND_ENABLED) {
@@ -395,7 +412,7 @@ public class SuperNova {
 	private static void enemiesShoot() {
 		for (Enemy enemy : enemies) {
 			if (System.currentTimeMillis() - enemy.getLastShotTime() > enemy.getShotInterval()) {
-				bullets.add(new Bullet(BulletColor.VIOLET,enemy.getXLoc(), enemy.getYLoc(), -1));
+				bullets.add(new Bullet(BulletColor.RED,enemy.getXLoc(), enemy.getYLoc(), -1));
 				enemy.setLastShotTime(System.currentTimeMillis());
 				if (SOUND_ENABLED && !sm.isPlayingSound())
 					sm.playEffect(enemylaserSource);
@@ -458,6 +475,7 @@ public class SuperNova {
 
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
+			Keyboard.enableRepeatEvents(false);
 			gameState = GameState.MENU;
 			enemies.clear();
 			bullets.clear();
@@ -524,10 +542,10 @@ public class SuperNova {
 			}
 
 		}
-//		else {
-//			xPos = Mouse.getX();
-//			yPos = Mouse.getY();
-//		}
+		else {
+			xPos = Mouse.getX();
+			yPos = Mouse.getY();
+		}
 
 		if (xPos < ship.getSize()) {
 			xPos = ship.getSize();

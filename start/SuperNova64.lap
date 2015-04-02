@@ -4,7 +4,7 @@
 janel.main.class=de.pueski.supernova.SuperNova
 janel.java.bundle=SDK
 janel.bin.jvm.dir=client
-janel.jvm.path=${env.JAVA_HOME}\jre\bin\server\jvm.dll
+janel.jvm.path=jre\bin\server\jvm.dll
 #janel.java.home.path=d:\Programs\j2sdk14
 #janel.min.java.version=1.4
 #janel.max.java.version=1.5

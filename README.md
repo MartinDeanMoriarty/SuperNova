@@ -28,6 +28,23 @@ The main class is SuperNova.java located inside the package de.pueski.supernova
 There you'll find the heart of the game. Also this is the main class to be run 
 from within Eclipse.
 
+Play
+=================================
+You can move around with the mouse, the keyboard or the gamepad.
+
+Keyboard:
+
+Use WASD or cursor keys to move, SPACE to fire, ESC moves you back to the menu, F10
+exits the game.
+
+Mouse:
+Mouse to move, left mouse button to fire
+
+Gamepad:
+With an XBOX Controller use left stick to move the shop  and A-Button to fire, other pads
+are not tested.
+
+
 Build
 =================================
 Use ant to build, simply invoke 
@@ -38,6 +55,8 @@ to build the distribution. You'll find the zipped distribution inside the dist
 directory.  
 
  
+Run
+=================================
 
 
   

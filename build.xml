@@ -44,6 +44,7 @@
 			<attribute name="Main-Class" value="${mainclass}" />
 			<attribute name="Class-Path" value="lib/jinput.jar	
 				lib/log4j-1.2.14.jar
+				lib/commons-logging-1.2.jar
 				lib/lwjgl_test.jar
 				lib/lwjgl_util_applet.jar
 				lib/lwjgl_util.jar

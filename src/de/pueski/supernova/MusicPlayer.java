@@ -52,8 +52,10 @@ public class MusicPlayer {
 		File root = new File(inputDir);
 		
 		if (!root.exists() || root.listFiles() == null) {
-			root = new File(".");
+			root = new File("./resources");
 		}
+		
+		log.info("Loading music from "+root.getAbsolutePath());
 		
 		File[] files = root.listFiles();
 		

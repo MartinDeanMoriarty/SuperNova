@@ -26,6 +26,7 @@ public class TextureManager {
 		addTexture("images/destroyer_glow.png");
 		addTexture("images/explosion0.png");
 		addTexture("images/viper.png");
+		addTexture("images/explosion1.png");
 		addTexture("images/viper_shadow.png");
 		addTexture("images/spaceship_transp.png");
 		addTexture("images/supernova_fg.png");

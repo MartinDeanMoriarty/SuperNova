@@ -89,6 +89,7 @@ public class SuperNova {
 	static int energyWarningSource;
 	static int energySource;
 	static int reloadSource;
+	static int shieldSource;
 	
 	static Text scoreText;
 	static Text menuText;
@@ -199,7 +200,8 @@ public class SuperNova {
 		energyWarningSource = sm.addSound("audio/energywarning.wav");
 		reloadSource = sm.addSound("audio/reload.wav");
 		energySource = sm.addSound("audio/tada.wav");
-
+		shieldSource = sm.addSound("audio/portal.wav");
+		
 		float volume = 0.4f;
 		
 		try {
@@ -652,6 +654,12 @@ public class SuperNova {
 					}
 				}
 				else if (entity instanceof Shield) {					
+					if (SOUND_ENABLED) {
+						if (!sm.isPlayingSound()) {
+							sm.playEffect(shieldSource);	
+						}						
+					}
+					
 					ship.setShielded(true);					
 					// turn of the shield after 30 seconds
 					defaultTimer.schedule(new TimerTask() {
@@ -660,7 +668,7 @@ public class SuperNova {
 							ship.setShielded(false);
 						}
 						
-					}, 30000);					
+					}, 30000);		
 				}
 
 			}

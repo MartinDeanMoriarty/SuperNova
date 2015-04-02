@@ -1,10 +1,14 @@
 package de.pueski.supernova;
 
+import java.util.Random;
+
 import org.lwjgl.opengl.GL11;
 
 public class Enemy extends Entity implements IExplodable {
 
 	private static final float speed = 3.0f;
+
+	private static final int MAXEXPLOSIONS = 2;
 
 	private int enemyClass = 0;
 	
@@ -25,11 +29,15 @@ public class Enemy extends Entity implements IExplodable {
 
 	private float rot = 180.0f;
 
-	private int explosionTexId;
-
 	private int explosionIndex = 0;
 	
 	private float angle = 0.0f;
+
+	private int[] explosionTexId = new int[MAXEXPLOSIONS];
+
+	private int kind;
+	
+	private static final Random random = new Random();
 
 	public Enemy(float xLoc, float yLoc, int hitPoints, long shotInterval, int enemyClass) {
 		this.xLoc = xLoc;
@@ -49,10 +57,12 @@ public class Enemy extends Entity implements IExplodable {
 		
 		this.enemyClass = enemyClass;
 		
-		this.explosionTexId = TextureManager.getInstance().getTexture("images/explosion0.png");
+		this.explosionTexId[0] = TextureManager.getInstance().getTexture("images/explosion0.png");
+		this.explosionTexId[1] = TextureManager.getInstance().getTexture("images/explosion1.png");
 		this.lastShotTime = System.currentTimeMillis();
 		this.shotInterval = shotInterval;
 		this.size = 20.0f;
+		this.kind = random.nextInt(2); 
 	}
 
 	/**
@@ -122,7 +132,7 @@ public class Enemy extends Entity implements IExplodable {
 		GL11.glTranslatef(xLoc, yLoc, 0);
 		GL11.glScalef(1.5f, 1.5f, 0.0f);
 		GL11.glRotatef(90.0f, 0.0f, 0.0f, 1.0f);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, explosionTexId);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, explosionTexId[kind]);
 		GL11.glBegin(GL11.GL_POLYGON);
 		// bottom left
 		GL11.glTexCoord2f(0f + x_i * column, (1f / 8) + y_i * row);

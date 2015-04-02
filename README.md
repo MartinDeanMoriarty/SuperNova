@@ -57,6 +57,12 @@ directory.
  
 Run
 =================================
+Use the provided SuperNova(64).exe on windows or the SuperNova batch file.
+
+For Linux and othe Unixoids simply type
+
+java -Djava.library.path=./native -jar SuperNova.jar
+
 
 
   

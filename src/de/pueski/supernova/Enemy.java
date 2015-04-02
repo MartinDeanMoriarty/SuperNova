@@ -38,13 +38,13 @@ public class Enemy extends Entity implements IExplodable {
 		this.index = System.currentTimeMillis();
 		
 		if (enemyClass == 0) {
-			this.texId = TextureManager.getInstance().getTexture("alien3.png");			
+			this.texId = TextureManager.getInstance().getTexture("images/alien3.png");			
 		}
 		else if (enemyClass == 1) {
-			this.texId = TextureManager.getInstance().getTexture("aliensprite.png");
+			this.texId = TextureManager.getInstance().getTexture("images/aliensprite.png");
 		}
 		else if (enemyClass == 2){
-			this.texId = TextureManager.getInstance().getTexture("alien4.png");
+			this.texId = TextureManager.getInstance().getTexture("images/alien4.png");
 		}
 		
 		this.enemyClass = enemyClass;

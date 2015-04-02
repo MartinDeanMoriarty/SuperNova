@@ -52,7 +52,7 @@ public class MusicPlayer {
 		File root = new File(inputDir);
 		
 		if (!root.exists() || root.listFiles() == null) {
-			root = new File("./resources");
+			root = new File("./resources/audio");
 		}
 		
 		log.info("Loading music from "+root.getAbsolutePath());

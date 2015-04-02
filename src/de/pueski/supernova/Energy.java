@@ -19,7 +19,7 @@ public class Energy extends Entity {
 		this.xLoc = xLoc;
 		this.yLoc = yLoc;
 		this.index = System.currentTimeMillis();
-		InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("energy.png");		
+		InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("images/energy.png");		
 		this.texId = TextureUtil.loadTexture(is);
 		this.size = 32.0f;
 	}

@@ -16,10 +16,10 @@ public class Bullet extends Entity {
 	private static final HashMap<BulletColor, String> imageMap = new HashMap<Bullet.BulletColor, String>();
 	
 	static {
-		imageMap.put(BulletColor.RED, "laser.png");
-		imageMap.put(BulletColor.BLUE, "laser_blue.png");
-		imageMap.put(BulletColor.GREEN, "laser_green.png");
-		imageMap.put(BulletColor.VIOLET, "laser_violet.png");
+		imageMap.put(BulletColor.RED, "images/laser.png");
+		imageMap.put(BulletColor.BLUE, "images/laser_blue.png");
+		imageMap.put(BulletColor.GREEN, "images/laser_green.png");
+		imageMap.put(BulletColor.VIOLET, "images/laser_violet.png");
 	}
 	
 	private static final float speed = 10.0f;

@@ -193,12 +193,12 @@ public class SuperNova {
 	private static void initSound() {
 		sm = new SoundManager();
 		sm.initialize(256);
-		shipLaserSource = sm.addSound("laser.wav");
-		enemylaserSource = sm.addSound("zap.wav");
-		explosionSource = sm.addSound("explosion2.wav");
-		energyWarningSource = sm.addSound("energywarning.wav");
-		reloadSource = sm.addSound("reload.wav");
-		energySource = sm.addSound("tada.wav");
+		shipLaserSource = sm.addSound("audio/laser.wav");
+		enemylaserSource = sm.addSound("audio/zap.wav");
+		explosionSource = sm.addSound("audio/explosion2.wav");
+		energyWarningSource = sm.addSound("audio/energywarning.wav");
+		reloadSource = sm.addSound("audio/reload.wav");
+		energySource = sm.addSound("audio/tada.wav");
 
 		float volume = 0.4f;
 		
@@ -262,12 +262,12 @@ public class SuperNova {
 		int j = 6;
 		
 		for (int i = 0; i< MAXPANELS;i++) {
-			bgTex[i] = TextureManager.getInstance().getTexture("mars_0"+j+".png");
+			bgTex[i] = TextureManager.getInstance().getTexture("images/mars_0"+j+".png");
 			j--;
 		}
 		
-		menuTexId = TextureManager.getInstance().getTexture("supernova_fg.png");
-		starfieldTexId = TextureManager.getInstance().getTexture("starfield.png");
+		menuTexId = TextureManager.getInstance().getTexture("images/supernova_fg.png");
+		starfieldTexId = TextureManager.getInstance().getTexture("images/starfield.png");
 	}
 
 	private static void run() {

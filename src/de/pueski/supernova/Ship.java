@@ -37,9 +37,9 @@ public class Ship extends Entity implements IExplodable, IDrawable {
 		this.xLoc = xLoc;
 		this.yLoc = yLoc;
 		this.energy = 100;
-		this.texId =  TextureManager.getInstance().getTexture("destroyer.png");						
-		this.shadowTexId = TextureManager.getInstance().getTexture("destroyer_glow.png");		
-		this.explosionTexId = TextureManager.getInstance().getTexture("explosion0.png");
+		this.texId =  TextureManager.getInstance().getTexture("images/destroyer.png");						
+		this.shadowTexId = TextureManager.getInstance().getTexture("images/destroyer_glow.png");		
+		this.explosionTexId = TextureManager.getInstance().getTexture("images/explosion0.png");
 		this.visible = true;
 		this.size = 25.0f;
 	}

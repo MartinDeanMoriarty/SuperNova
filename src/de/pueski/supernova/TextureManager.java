@@ -18,29 +18,29 @@ public class TextureManager {
 	
 	private TextureManager() {
 		textures = new HashMap<String, Integer>();
-		addTexture("aliensprite.png");
-		addTexture("alien3.png");
-		addTexture("alien4.png");
-		addTexture("F5S4.png");
-		addTexture("destroyer.png");
-		addTexture("destroyer_glow.png");
-		addTexture("explosion0.png");
-		addTexture("viper.png");
-		addTexture("viper_shadow.png");
-		addTexture("spaceship_transp.png");
-		addTexture("supernova_fg.png");
-		addTexture("starfield.png");
-		addTexture("laser.png");
-		addTexture("laser_blue.png");
-		addTexture("laser_green.png");
-		addTexture("laser_violet.png");
-		addTexture("mars_01.png");
-		addTexture("mars_02.png");
-		addTexture("mars_03.png");
-		addTexture("mars_04.png");
-		addTexture("mars_05.png");
-		addTexture("mars_06.png");
-		addTexture("healthbar.png");
+		addTexture("images/aliensprite.png");
+		addTexture("images/alien3.png");
+		addTexture("images/alien4.png");
+		addTexture("images/F5S4.png");
+		addTexture("images/destroyer.png");
+		addTexture("images/destroyer_glow.png");
+		addTexture("images/explosion0.png");
+		addTexture("images/viper.png");
+		addTexture("images/viper_shadow.png");
+		addTexture("images/spaceship_transp.png");
+		addTexture("images/supernova_fg.png");
+		addTexture("images/starfield.png");
+		addTexture("images/laser.png");
+		addTexture("images/laser_blue.png");
+		addTexture("images/laser_green.png");
+		addTexture("images/laser_violet.png");
+		addTexture("images/mars_01.png");
+		addTexture("images/mars_02.png");
+		addTexture("images/mars_03.png");
+		addTexture("images/mars_04.png");
+		addTexture("images/mars_05.png");
+		addTexture("images/mars_06.png");
+		addTexture("images/healthbar.png");
 	}
 	
 	static TextureManager getInstance() {

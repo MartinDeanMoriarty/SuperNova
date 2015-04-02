@@ -171,7 +171,7 @@ public class Text implements IFadeable, IDrawable {
 	public Text(float xLoc, float yLoc, String text) {
 		this.xLoc = xLoc;
 		this.yLoc = yLoc;
-		InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("fonts_monospace_288_glowing.png");
+		InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("images/fonts_monospace_288_glowing.png");
 		textureId = TextureUtil.loadTexture(is);
 		this.text = text;
 	}

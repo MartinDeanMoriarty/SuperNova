@@ -21,7 +21,7 @@ public class Ammo extends Entity {
 		this.xLoc = xLoc;
 		this.yLoc = yLoc;
 		this.index = System.currentTimeMillis();
-		InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("ammo.png");		
+		InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("images/ammo.png");		
 		this.texId = TextureUtil.loadTexture(is);
 		this.size = 32.0f;
 	}

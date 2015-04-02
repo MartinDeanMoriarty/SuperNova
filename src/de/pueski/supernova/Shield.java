@@ -17,7 +17,7 @@ public class Shield extends Entity {
 		this.xLoc = xLoc;
 		this.yLoc = yLoc;
 		this.index = System.currentTimeMillis();
-		InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("shield.png");		
+		InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("images/shield.png");		
 		this.texId = TextureUtil.loadTexture(is);
 		this.size = 32.0f;
 	}

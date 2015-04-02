@@ -61,7 +61,7 @@ public class GLBarGraphDisplay implements IDrawable {
 		this.border = border;
 		this.colored = colored;
 		time = System.currentTimeMillis();
-		this.texId = TextureManager.getInstance().getTexture("healthbar.png");
+		this.texId = TextureManager.getInstance().getTexture("images/healthbar.png");
 	}
 
 	@Override

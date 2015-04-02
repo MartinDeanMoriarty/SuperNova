@@ -31,7 +31,7 @@ public class SuperNova {
 	private static final int HEIGHT = 600;
 	private static final int FRAMERATE = 100;
 	private static final int MAX_AMMO = 1000;
-	private static final boolean SOUND_ENABLED = false;
+	private static final boolean SOUND_ENABLED = true;
 
 	private static final int MAXPANELS = 6;
 	

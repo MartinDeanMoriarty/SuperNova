@@ -3,10 +3,15 @@ package de.pueski.supernova;
 import java.io.InputStream;
 import java.util.HashMap;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import de.pueski.supernova.tools.TextureUtil;
 
 public class TextureManager {
 
+	private static final Log log = LogFactory.getLog(TextureManager.class);
+	
 	private static TextureManager INSTANCE = null;
 
 	private final HashMap<String, Integer> textures;
@@ -50,7 +55,7 @@ public class TextureManager {
 	}
 	
 	private void addTexture(String textureLocation) {
-		System.out.println("Loading texture from "+textureLocation);
+		log.info("Loading texture from "+textureLocation);
 		InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(textureLocation);		
 		int id = TextureUtil.loadTexture(is);
 		if (!textures.containsKey(textureLocation)) {

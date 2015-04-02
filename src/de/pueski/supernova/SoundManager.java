@@ -34,6 +34,8 @@ package de.pueski.supernova;
 
 import java.nio.IntBuffer;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.openal.AL;
@@ -53,6 +55,8 @@ import org.lwjgl.util.WaveData;
  */
 public class SoundManager {
 
+	private static final Log log = LogFactory.getLog(SoundManager.class);
+	
 	/** We support at most 256 buffers */
 	private int[] buffers = new int[256];
 
@@ -143,7 +147,7 @@ public class SoundManager {
 		}
 		catch (LWJGLException le) {
 			le.printStackTrace();
-			System.out.println("Sound disabled");
+			log.info("Sound disabled");
 		}
 	}
 

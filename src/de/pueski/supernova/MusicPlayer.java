@@ -11,11 +11,15 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class MusicPlayer {
 
+	private static final Log log = LogFactory.getLog(MusicPlayer.class);
+	
 	private static String inputDir = ".";	
 	private ArrayList<File> songs;	
 	private int songIndex = 0;	
@@ -47,26 +51,38 @@ public class MusicPlayer {
 		
 		File root = new File(inputDir);
 		
+		if (!root.exists() || root.listFiles() == null) {
+			root = new File(".");
+		}
+		
 		File[] files = root.listFiles();
-
-		songs = new ArrayList<File>();
 		
-		for (int i=0; i < files.length;i++) {
-			if (files[i].getName().endsWith(".mp3")) {
-				songs.add(files[i]);
+		if (files != null) {
+			
+			songs = new ArrayList<File>();
+			
+			for (int i=0; i < files.length;i++) {
+				if (files[i].getName().endsWith(".mp3")) {
+					songs.add(files[i]);
+				}
 			}
+			
+			if (songs.size() > 0) {
+				// select a random song at the beginning
+				Random r = new Random();
+				songIndex = r.nextInt(songs.size());
+				
+				try {
+					songInput = new FileInputStream(songs.get(songIndex));
+				}
+				catch (FileNotFoundException e) {
+					log.error("File not found.");
+				}
+				
+			}
+			
 		}
 
-		// select a random song at the beginning
-		Random r = new Random();
-		songIndex = r.nextInt(songs.size());
-		
-		try {
-			songInput = new FileInputStream(songs.get(songIndex));
-		}
-		catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
 	}
 
 	public void start() {		
@@ -83,9 +99,8 @@ public class MusicPlayer {
 			songInput = new FileInputStream(songs.get(songIndex));
 		}
 		catch (FileNotFoundException e) {
-			e.printStackTrace();
+			log.error("File not found.");
 		}
-
 		
 		play();		
 	}
@@ -107,7 +122,7 @@ public class MusicPlayer {
 			songInput = new FileInputStream(songs.get(songIndex));
 		}
 		catch (FileNotFoundException e) {
-			e.printStackTrace();
+			log.error("File not found.");
 		}
 		
 		play();
@@ -130,7 +145,7 @@ public class MusicPlayer {
 			songInput = new FileInputStream(songs.get(songIndex));
 		}
 		catch (FileNotFoundException e) {
-			e.printStackTrace();
+			log.error("File not found.");
 		}
 		
 		play();
@@ -142,10 +157,15 @@ public class MusicPlayer {
 			@Override
 			public synchronized void run() {
 				try {
-					player = new Player(songInput);			
-					player.play();
+					if (songInput != null) {
+						player = new Player(songInput);			
+						player.play();						
+					}
+					else {
+						log.error("Unable to play song input.");
+					}
 				}
-				catch (JavaLayerException e) {
+				catch (Exception e) {
 					e.printStackTrace();
 				}
 
@@ -155,7 +175,12 @@ public class MusicPlayer {
 	}
 	
 	public String getCurrentSongName() {
-		return songs.get(songIndex).getName();
+		try {
+			return songs.get(songIndex).getName();			
+		}
+		catch (IndexOutOfBoundsException ioe) {
+			return "no song available";
+		}
 	}
 	
 }

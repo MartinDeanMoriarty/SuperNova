@@ -49,8 +49,7 @@ public class Enemy extends Entity implements IExplodable {
 		
 		this.enemyClass = enemyClass;
 		
-		this.explosionTexId = TextureManager.getInstance().getTexture(
-				"explosion0.png");
+		this.explosionTexId = TextureManager.getInstance().getTexture("images/explosion0.png");
 		this.lastShotTime = System.currentTimeMillis();
 		this.shotInterval = shotInterval;
 		this.size = 20.0f;

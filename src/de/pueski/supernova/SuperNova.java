@@ -31,7 +31,9 @@ public class SuperNova {
 	private static final int HEIGHT = 600;
 	private static final int FRAMERATE = 100;
 	private static final int MAX_AMMO = 1000;
-	private static final boolean SOUND_ENABLED = true;
+	private static final boolean SOUND_ENABLED = false;
+
+	private static final int MAXPANELS = 6;
 	
 	private static boolean finished;
 
@@ -45,12 +47,7 @@ public class SuperNova {
 
 	static int ammo = MAX_AMMO;
 
-	static int texId1;
-	static int texId2;
-	static int texId3;
-	static int texId4;
-	static int texId5;
-	static int texId6;
+	private static final int[] bgTex = new int[MAXPANELS];
 
 	static int displayListId;
 
@@ -79,7 +76,7 @@ public class SuperNova {
 	private static final ArrayList<IDrawable> drawables = new ArrayList<IDrawable>();
 	private static final ArrayList<IFadeable> fadeables = new ArrayList<IFadeable>();
 
-	private static final Timer sequenceTimer = new Timer();
+	private static final Timer defaultTimer = new Timer();
 
 	static Random random;
 	static long frameTime;
@@ -111,8 +108,6 @@ public class SuperNova {
 
 	private static long lastAmmoTime = 5000l;
 	private static long lastEnergyTime;
-
-
 
 	private SuperNova() {
 	}
@@ -152,7 +147,7 @@ public class SuperNova {
 		initHUD();
 		drawBackground();
 
-		sequenceTimer.schedule(new TimerTask() {
+		defaultTimer.schedule(new TimerTask() {
 
 			@Override
 			public void run() {
@@ -215,7 +210,6 @@ public class SuperNova {
 		}
 		
 		sm.adjustAllVolumes(volume);
-		sm.adjustVolume(2, volume);
 
 		musicPlayer = new MusicPlayer();
 	}
@@ -246,25 +240,30 @@ public class SuperNova {
 		GL11.glNewList(displayListId, GL11.GL_COMPILE);
 		GL11.glPushMatrix();
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		TextureUtil.drawTexturedSquare(0, 300, 3900, 600, texId1);
-		TextureUtil.drawTexturedSquare(0, 300, 3300, 600, texId6);
-		TextureUtil.drawTexturedSquare(0, 300, 2700, 600, texId5);
-		TextureUtil.drawTexturedSquare(0, 300, 2100, 600, texId4);
-		TextureUtil.drawTexturedSquare(0, 300, 1500, 600, texId3);
-		TextureUtil.drawTexturedSquare(0, 300, 900, 600, texId2);
-		TextureUtil.drawTexturedSquare(0, 300, 300, 600, texId1);
+		
+		TextureUtil.drawTexturedSquare(0, 300, 3900, 600, bgTex[0]);
+		
+		int j = 0;
+		
+		for (int i = 5; i >= 0;i--) {
+			TextureUtil.drawTexturedSquare(0, 300, 3300 - j * 600, 600, bgTex[i]);
+			j++;
+		}
+		
 		GL11.glPopMatrix();
 		GL11.glEndList();
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 	}
 
 	private static void loadTextures() {
-		texId1 = TextureManager.getInstance().getTexture("mars_06.png");
-		texId2 = TextureManager.getInstance().getTexture("mars_05.png");
-		texId3 = TextureManager.getInstance().getTexture("mars_04.png");
-		texId4 = TextureManager.getInstance().getTexture("mars_03.png");
-		texId5 = TextureManager.getInstance().getTexture("mars_02.png");
-		texId6 = TextureManager.getInstance().getTexture("mars_01.png");
+		
+		int j = 6;
+		
+		for (int i = 0; i< MAXPANELS;i++) {
+			bgTex[i] = TextureManager.getInstance().getTexture("mars_0"+j+".png");
+			j--;
+		}
+		
 		menuTexId = TextureManager.getInstance().getTexture("supernova.png");
 		starfieldTexId = TextureManager.getInstance().getTexture("starfield.png");
 	}
@@ -347,6 +346,7 @@ public class SuperNova {
 	}
 
 	private static void processLevelEndLogic() {
+		// TODO : Until the end...
 	}
 
 	private static void processMenuLogic() {
@@ -378,7 +378,7 @@ public class SuperNova {
 
 	private static void processGameOverLogic() {
 
-		createRandomEntities();
+		createRandomEnemies();
 		enemiesShoot();
 		moveBullets();
 		moveEnemies();
@@ -414,14 +414,40 @@ public class SuperNova {
 			if (System.currentTimeMillis() - enemy.getLastShotTime() > enemy.getShotInterval()) {
 				bullets.add(new Bullet(BulletColor.RED,enemy.getXLoc(), enemy.getYLoc(), -1));
 				enemy.setLastShotTime(System.currentTimeMillis());
-				if (SOUND_ENABLED && !sm.isPlayingSound())
-					sm.playEffect(enemylaserSource);
+				if (SOUND_ENABLED) {
+					if (!sm.isPlayingSound()) {
+						sm.playEffect(enemylaserSource);	
+					}					
+				}
 			}
 		}
 	}
 
 	private static void createRandomEntities() {
 
+
+		if (System.currentTimeMillis() - lastAmmoTime > 20000l && System.currentTimeMillis() - startTime > 5000) {
+			float f = random.nextFloat();
+			entities.add(new Ammo(WIDTH * f, HEIGHT, 4));
+			lastAmmoTime = System.currentTimeMillis();
+		}
+		if (System.currentTimeMillis() - lastEnergyTime > 30000 && System.currentTimeMillis() - startTime > 5000) {
+			float f = random.nextFloat();
+			entities.add(new Energy(WIDTH * f, HEIGHT, 4));
+			lastEnergyTime = System.currentTimeMillis();
+		}
+		// do not allow a new shield item to be appear if the ship is already shielded.
+		if (!ship.isShielded()) {
+			if (System.currentTimeMillis() - lastEnergyTime > 10000 && System.currentTimeMillis() - startTime > 5000) {
+				float f = random.nextFloat();
+				entities.add(new Shield(WIDTH * f, HEIGHT, 4));
+				lastEnergyTime = System.currentTimeMillis();
+			}					
+		}
+
+	}
+
+	private static void createRandomEnemies() {
 		int enemyClass = random.nextInt(3);
 		
 		switch (sequence) {
@@ -457,18 +483,6 @@ public class SuperNova {
 			default:
 				break;
 		}
-
-		if (System.currentTimeMillis() - lastAmmoTime > 20000l && System.currentTimeMillis() - startTime > 5000) {
-			float f = random.nextFloat();
-			entities.add(new Ammo(WIDTH * f, HEIGHT, 4));
-			lastAmmoTime = System.currentTimeMillis();
-		}
-		if (System.currentTimeMillis() - lastEnergyTime > 30000 && System.currentTimeMillis() - startTime > 5000) {
-			float f = random.nextFloat();
-			entities.add(new Energy(WIDTH * f, HEIGHT, 4));
-			lastEnergyTime = System.currentTimeMillis();
-		}
-
 	}
 
 	private static void processRunningStateLogic() {
@@ -564,6 +578,7 @@ public class SuperNova {
 		shootX = xPos;
 		shootY = yPos;
 
+		createRandomEnemies();
 		createRandomEntities();
 		enemiesShoot();
 		
@@ -616,18 +631,34 @@ public class SuperNova {
 					ammo += a.getAmount();
 
 					ammoText.setText("Ammo " + ammo);
-					if (SOUND_ENABLED && !sm.isPlayingSound()) {
-						sm.playEffect(reloadSource);
-					}
+					
+					if (SOUND_ENABLED) {
+						if (!sm.isPlayingSound()) {								
+							sm.playEffect(reloadSource);
+						}							
+					}						
+					
 				}
 				else if (entity instanceof Energy) {
-
 					Energy e = (Energy) entity;
 					ship.addEnergy(e);
 					energyDisplay.setValue(ship.getEnergy());
-					if (SOUND_ENABLED && !sm.isPlayingSound()) {
-						sm.playEffect(energySource);
+					if (SOUND_ENABLED) {
+						if (!sm.isPlayingSound()) {
+							sm.playEffect(energySource);	
+						}						
 					}
+				}
+				else if (entity instanceof Shield) {					
+					ship.setShielded(true);					
+					// turn of the shield after 30 seconds
+					defaultTimer.schedule(new TimerTask() {
+						@Override
+						public void run() {
+							ship.setShielded(false);
+						}
+						
+					}, 30000);					
 				}
 
 			}
@@ -772,7 +803,9 @@ public class SuperNova {
 	}
 
 	private static void shoot() {
+		
 		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE) || Mouse.isButtonDown(0) || ((defaultController != null) && defaultController.isButtonPressed(0))) {
+		
 			if (ammo > 0) {
 				if (System.currentTimeMillis() - lastShotTime > 200) {
 					bullets.add(new Bullet(BulletColor.GREEN,shootX + 8, shootY, 1));
@@ -780,10 +813,13 @@ public class SuperNova {
 					bullets.add(new Bullet(BulletColor.GREEN,shootX + 43, shootY - 8, 1));
 					bullets.add(new Bullet(BulletColor.GREEN,shootX + -43, shootY - 8, 1));
 					lastShotTime = System.currentTimeMillis();
-					if (SOUND_ENABLED && !sm.isPlayingSound()) {
-						sm.playEffect(shipLaserSource);
+					if (SOUND_ENABLED) {
+						if (!sm.isPlayingSound()) {
+							sm.playEffect(shipLaserSource);
+						}						
 					}
 				}
+				
 				ammo--;
 				ammoText.setText("Ammo " + ammo);
 			}
@@ -850,8 +886,7 @@ public class SuperNova {
 	}
 
 	private static void processLevelEndRender() {
-		// TODO Auto-generated method stub
-
+		// TODO : Wee need to do something, if the game is over, but when is it over?
 	}
 
 	private static void processMenuRender() {

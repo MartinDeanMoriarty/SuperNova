@@ -50,6 +50,7 @@ public class TextureManager {
 	}
 	
 	private void addTexture(String textureLocation) {
+		System.out.println("Loading texture from "+textureLocation);
 		InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(textureLocation);		
 		int id = TextureUtil.loadTexture(is);
 		if (!textures.containsKey(textureLocation)) {

@@ -6,7 +6,7 @@ public class Ship extends Entity implements IExplodable, IDrawable {
 	
 	private int energy;
 	
-	private boolean shielded = true;
+	private boolean shielded = false;
 	
 	private int texId;
 	private int shadowTexId;
@@ -104,27 +104,33 @@ public class Ship extends Entity implements IExplodable, IDrawable {
 		
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		
-		if (fade.equals(Fade.IN)) {
-			
-			if (shieldAlpha < 1.0f) {
-				shieldAlpha += 0.005f;
+		if (shielded) {
+		
+			if (fade.equals(Fade.IN)) {
+				
+				if (shieldAlpha < 1.0f) {
+					shieldAlpha += 0.005f;
+				}
+				else {
+					shieldAlpha = 1.0f;
+					fade = Fade.OUT;
+				}
+				
 			}
 			else {
-				shieldAlpha = 1.0f;
-				fade = Fade.OUT;
+				if (shieldAlpha > 0) {
+					shieldAlpha -= 0.005f;
+				}
+				else {
+					shieldAlpha = 0.0f;
+					fade = Fade.IN;
+				}				
 			}
 			
 		}
 		else {
-			if (shieldAlpha > 0) {
-				shieldAlpha -= 0.005f;
-			}
-			else {
-				shieldAlpha = 0.0f;
-				fade = Fade.IN;
-			}				
+			shieldAlpha = 0.0f;
 		}
-		
 		
 		GL11.glColor4f(1.0f, 1.0f, 1.0f, shieldAlpha);
 		GL11.glPushMatrix();

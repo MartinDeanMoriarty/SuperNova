@@ -109,6 +109,8 @@ public class SuperNova {
 	private static long lastAmmoTime = 5000l;
 	private static long lastEnergyTime;
 
+
+	
 	private SuperNova() {
 	}
 
@@ -264,7 +266,7 @@ public class SuperNova {
 			j--;
 		}
 		
-		menuTexId = TextureManager.getInstance().getTexture("supernova.png");
+		menuTexId = TextureManager.getInstance().getTexture("supernova_fg.png");
 		starfieldTexId = TextureManager.getInstance().getTexture("starfield.png");
 	}
 
@@ -894,8 +896,18 @@ public class SuperNova {
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		GL11.glColor3f(1.0f, 1.0f, 1.0f);
+		
+		TextureUtil.drawTexture(0, 300, 900 + starfieldYOffset, 300, starfieldTexId);
+		TextureUtil.drawTexture(0, 300, 300 + starfieldYOffset, 300, starfieldTexId);
+		TextureUtil.drawTexture(0, 300, -300 + starfieldYOffset, 300, starfieldTexId);
+		
 		TextureUtil.drawTexture(0, 300, 300, 300, menuTexId);
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		
+		starfieldYOffset += starfieldVelocity;
+
+		if (starfieldYOffset >= HEIGHT)
+			starfieldYOffset = 0;
 	}
 
 	private static void processGameOverRender() {

@@ -23,7 +23,7 @@ public class TextureManager {
 		addTexture("viper.png");
 		addTexture("viper_shadow.png");
 		addTexture("spaceship_transp.png");
-		addTexture("supernova.png");
+		addTexture("supernova_fg.png");
 		addTexture("starfield.png");
 		addTexture("laser.png");
 		addTexture("laser_blue.png");

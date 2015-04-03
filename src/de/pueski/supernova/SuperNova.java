@@ -526,7 +526,7 @@ public class SuperNova {
 				fadeables.add(nowPlaying);
 				fadeables.add(songName);
 			}
-			if (Keyboard.isKeyDown(Keyboard.KEY_M) || ((defaultController != null) && defaultController.isButtonPressed(5))) {
+			if (Keyboard.isKeyDown(Keyboard.KEY_M) || ((defaultController != null) && defaultController.isButtonPressed(5)) || Mouse.isButtonDown(1)) {
 				musicPlayer.nextSong();
 				songName.setText(musicPlayer.getCurrentSongName());
 				nowPlaying.setMode(Fade.IN);
@@ -997,7 +997,7 @@ public class SuperNova {
 
 		}
 
-		float fadeInSpeed = 0.001f;
+		float fadeInSpeed = 0.01f;
 		float fadeOutSpeed = 0.001f;
 
 		for (Iterator<IFadeable> it = fadeables.iterator(); it.hasNext();) {

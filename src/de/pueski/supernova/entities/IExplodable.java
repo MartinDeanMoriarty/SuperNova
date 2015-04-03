@@ -1,4 +1,4 @@
-package de.pueski.supernova;
+package de.pueski.supernova.entities;
 
 public interface IExplodable {
 

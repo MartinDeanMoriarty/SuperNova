@@ -1,8 +1,10 @@
-package de.pueski.supernova;
+package de.pueski.supernova.entities;
 
 import java.util.HashMap;
 
 import org.lwjgl.opengl.GL11;
+
+import de.pueski.supernova.game.TextureManager;
 
 public class Bullet extends Entity {
 

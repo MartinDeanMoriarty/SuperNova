@@ -1,6 +1,8 @@
-package de.pueski.supernova;
+package de.pueski.supernova.entities;
 
 import org.lwjgl.opengl.GL11;
+
+import de.pueski.supernova.game.TextureManager;
 
 public class Ship extends Entity implements IExplodable, IDrawable {
 	

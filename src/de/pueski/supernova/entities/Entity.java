@@ -1,4 +1,5 @@
-package de.pueski.supernova;
+package de.pueski.supernova.entities;
+
 
 public abstract class Entity implements IDrawable {
 

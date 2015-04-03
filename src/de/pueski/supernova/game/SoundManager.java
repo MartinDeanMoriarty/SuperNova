@@ -1,4 +1,4 @@
-package de.pueski.supernova;
+package de.pueski.supernova.game;
 
 /*
  * Copyright (c) 2002-2010 LWJGL Project

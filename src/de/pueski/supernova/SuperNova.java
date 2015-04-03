@@ -18,10 +18,17 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 
-import de.pueski.supernova.Bullet.BulletColor;
-import de.pueski.supernova.GLBarGraphDisplay.Orientation;
-import de.pueski.supernova.IFadeable.Fade;
+import de.pueski.supernova.entities.*;
+import de.pueski.supernova.entities.Bullet.BulletColor;
+import de.pueski.supernova.entities.IFadeable.Fade;
+import de.pueski.supernova.game.MusicPlayer;
+import de.pueski.supernova.game.SoundManager;
+import de.pueski.supernova.game.TextureManager;
 import de.pueski.supernova.tools.TextureUtil;
+import de.pueski.supernova.ui.GLBarGraphDisplay;
+import de.pueski.supernova.ui.GameState;
+import de.pueski.supernova.ui.Text;
+import de.pueski.supernova.ui.GLBarGraphDisplay.Orientation;
 
 public class SuperNova {
 

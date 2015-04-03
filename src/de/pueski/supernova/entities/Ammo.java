@@ -1,9 +1,8 @@
-package de.pueski.supernova;
+package de.pueski.supernova.entities;
 
 import java.io.InputStream;
 
 import static org.lwjgl.opengl.GL11.*;
-
 import de.pueski.supernova.tools.TextureUtil;
 
 public class Ammo extends Entity {

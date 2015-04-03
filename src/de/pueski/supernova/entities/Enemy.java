@@ -1,8 +1,10 @@
-package de.pueski.supernova;
+package de.pueski.supernova.entities;
 
 import java.util.Random;
 
 import org.lwjgl.opengl.GL11;
+
+import de.pueski.supernova.game.TextureManager;
 
 public class Enemy extends Entity implements IExplodable {
 

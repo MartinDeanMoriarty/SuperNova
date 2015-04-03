@@ -1,4 +1,4 @@
-package de.pueski.supernova;
+package de.pueski.supernova.entities;
 
 import java.io.InputStream;
 
@@ -6,20 +6,18 @@ import org.lwjgl.opengl.GL11;
 
 import de.pueski.supernova.tools.TextureUtil;
 
-public class Energy extends Entity {
+public class Shield extends Entity {
 
 	private static final float speed = 2.0f;
 	
 	private int texId;	
 	private long index; 
-
-	private int amount = 10;
 	
-	public Energy(float xLoc, float yLoc, int direction) {
+	public Shield(float xLoc, float yLoc, int direction) {
 		this.xLoc = xLoc;
 		this.yLoc = yLoc;
 		this.index = System.currentTimeMillis();
-		InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("images/energy.png");		
+		InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("images/shield.png");		
 		this.texId = TextureUtil.loadTexture(is);
 		this.size = 32.0f;
 	}
@@ -32,7 +30,7 @@ public class Energy extends Entity {
 			return true;
 		
 		if (obj.getClass() == getClass()) {
-			Energy other = (Energy)obj;
+			Shield other = (Shield)obj;
 			return (index == other.index);
 		}
 		
@@ -62,14 +60,6 @@ public class Energy extends Entity {
 		GL11.glEnd();
 		GL11.glPopMatrix();
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
-	}
-
-	public int getAmount() {
-		return amount;
-	}
-
-	public void setAmount(int amount) {
-		this.amount = amount;
 	}
 	
 }

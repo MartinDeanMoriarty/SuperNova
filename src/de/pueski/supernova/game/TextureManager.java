@@ -1,4 +1,4 @@
-package de.pueski.supernova;
+package de.pueski.supernova.game;
 
 import java.io.InputStream;
 import java.util.HashMap;
@@ -44,14 +44,14 @@ public class TextureManager {
 		addTexture("images/healthbar.png");
 	}
 	
-	static TextureManager getInstance() {
+	public static TextureManager getInstance() {
 		if (INSTANCE == null) {
 			INSTANCE = new TextureManager();
 		}
 		return INSTANCE;
 	}
 	
-	int getTexture(String name) {
+	public int getTexture(String name) {
 		return textures.get(name).intValue();
 	}
 	

@@ -7,7 +7,6 @@ import org.lwjgl.opengl.GL11;
 
 import de.pueski.supernova.entities.IDrawable;
 import de.pueski.supernova.entities.IFadeable;
-import de.pueski.supernova.entities.IFadeable.Fade;
 import de.pueski.supernova.tools.TextureUtil;
 
 public class Text implements IFadeable, IDrawable {

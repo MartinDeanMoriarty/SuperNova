@@ -35,8 +35,6 @@ package de.pueski.supernova.game;
 import java.nio.IntBuffer;
 import java.util.HashMap;
 
-import javax.print.attribute.HashAttributeSet;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.lwjgl.BufferUtils;

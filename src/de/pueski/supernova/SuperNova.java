@@ -26,9 +26,9 @@ import de.pueski.supernova.game.SoundManager;
 import de.pueski.supernova.game.TextureManager;
 import de.pueski.supernova.tools.TextureUtil;
 import de.pueski.supernova.ui.GLBarGraphDisplay;
+import de.pueski.supernova.ui.GLBarGraphDisplay.Orientation;
 import de.pueski.supernova.ui.GameState;
 import de.pueski.supernova.ui.Text;
-import de.pueski.supernova.ui.GLBarGraphDisplay.Orientation;
 
 public class SuperNova {
 
@@ -200,7 +200,7 @@ public class SuperNova {
 		}
 	}
 
-	private static void initSound() {
+	private static void initSound() throws Exception {
 		sm = new SoundManager();
 		sm.initialize(256);
 		shipLaserSource = sm.addSound("audio/laser.wav");
@@ -373,7 +373,6 @@ public class SuperNova {
 			ship.setEnergy(100);
 			energyDisplay.setValue(ship.getEnergy());
 			energyDisplay.setBlinking(false);
-			energyDisplay.setValue(100);
 			scoreText.setText("Score " + score);
 			gameState = GameState.RUNNING;
 			startTime = System.currentTimeMillis();
@@ -407,13 +406,31 @@ public class SuperNova {
 			}
 			enemies.clear();
 			bullets.clear();
-			gameState = GameState.MENU;
+			ship.setEnergy(100);
+			score = 0;
+			enemiesShot = 0;
 			energyDisplay.setValue(ship.getEnergy());
+			gameState = GameState.MENU;
+		}
+		else if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
+			Keyboard.poll();
+			if (SOUND_ENABLED) {
+				musicPlayer.nextSong();
+			}
+			enemies.clear();
+			bullets.clear();
+			ship.setEnergy(100);
+			ammo = MAX_AMMO;
+			score = 0;
+			enemiesShot = 0;
+			System.out.println("Energy : " + ship.getEnergy());
+			energyDisplay.setValue(ship.getEnergy());			
+			gameState = GameState.RUNNING;
 		}
 
 		yOffset += velocity;
 
-		if (yOffset >= HEIGHT)
+		if (yOffset >= 3600)
 			yOffset = 0;
 
 		starfieldYOffset += starfieldVelocity;
@@ -959,10 +976,6 @@ public class SuperNova {
 				it.remove();
 			}
 
-		}
-
-		for (IDrawable drawable : drawables) {
-			drawable.draw();
 		}
 
 		gameOverText.draw();

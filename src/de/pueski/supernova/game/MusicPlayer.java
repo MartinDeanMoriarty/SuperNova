@@ -3,6 +3,7 @@ package de.pueski.supernova.game;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,12 +19,17 @@ import javazoom.jl.player.Player;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.mpatric.mp3agic.InvalidDataException;
+import com.mpatric.mp3agic.Mp3File;
+import com.mpatric.mp3agic.UnsupportedTagException;
+
 public class MusicPlayer {
 
 	private static final Log log = LogFactory.getLog(MusicPlayer.class);
 
 	private static String inputDir = ".";
 	private ArrayList<File> songs;
+	private ArrayList<Mp3File> mp3Files;
 	private int songIndex = 0;
 	private InputStream songInput;
 	private volatile Player player;
@@ -32,7 +38,7 @@ public class MusicPlayer {
 
 	private static final ExecutorService executor = Executors.newFixedThreadPool(1);
 
-	public MusicPlayer() {
+	public MusicPlayer() throws Exception {
 
 		timer = new Timer(true);
 		timer.scheduleAtFixedRate(new TimerTask() {
@@ -66,10 +72,12 @@ public class MusicPlayer {
 		if (files != null) {
 
 			songs = new ArrayList<File>();
-
+			mp3Files = new ArrayList<Mp3File>();
+			
 			for (int i = 0; i < files.length; i++) {
 				if (files[i].getName().endsWith(".mp3")) {
 					songs.add(files[i]);
+					mp3Files.add(new Mp3File(files[i]));
 				}
 			}
 
@@ -186,7 +194,17 @@ public class MusicPlayer {
 
 	public String getCurrentSongName() {
 		try {
-			return songs.get(songIndex).getName();
+			
+			if (mp3Files.get(songIndex).hasId3v1Tag()) {
+				return mp3Files.get(songIndex).getId3v1Tag().getArtist()+ " - " + mp3Files.get(songIndex).getId3v1Tag().getTitle(); 
+			}
+			else if (mp3Files.get(songIndex).hasId3v2Tag()) {
+				return  mp3Files.get(songIndex).getId3v2Tag().getArtist() + " - " + mp3Files.get(songIndex).getId3v2Tag().getTitle();
+			}
+			else {
+				return songs.get(songIndex).getName().substring(0, songs.get(songIndex).getName().lastIndexOf("."));	
+			}			
+			
 		}
 		catch (IndexOutOfBoundsException ioe) {
 			return "no song available";

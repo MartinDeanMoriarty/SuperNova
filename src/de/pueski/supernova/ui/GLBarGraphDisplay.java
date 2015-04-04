@@ -152,7 +152,7 @@ public class GLBarGraphDisplay implements IDrawable {
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		
 		GL11.glPushMatrix();
-		GL11.glTranslatef(460f, 580f, 0);
+		GL11.glTranslatef(300f, 580f, 0);
 		GL11.glScalef(6.1f, 1.0f, 0.0f);
 		GL11.glRotatef(180.0f, 0.0f,0.0f,1.0f);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texId);

@@ -2,6 +2,7 @@ package de.pueski.supernova.entities;
 
 import org.lwjgl.opengl.GL11;
 
+import de.pueski.supernova.game.SoundManager;
 import de.pueski.supernova.game.TextureManager;
 
 public class Ship extends Entity implements IExplodable, IDrawable {
@@ -29,6 +30,10 @@ public class Ship extends Entity implements IExplodable, IDrawable {
 	float shieldAlpha = 1.0f;
 	
 	private Fade fade = Fade.IN;
+
+	private int shootSound;
+
+	private int explosionSource;
 	
 	private enum Fade {
 		IN,
@@ -39,11 +44,14 @@ public class Ship extends Entity implements IExplodable, IDrawable {
 		this.xLoc = xLoc;
 		this.yLoc = yLoc;
 		this.energy = 100;
+		
 		this.texId =  TextureManager.getInstance().getTexture("images/destroyer.png");						
 		this.shadowTexId = TextureManager.getInstance().getTexture("images/destroyer_glow.png");		
 		this.explosionTexId = TextureManager.getInstance().getTexture("images/explosion0.png");
 		this.visible = true;
 		this.size = 25.0f;
+		this.shootSound = SoundManager.getInstance().getSound("audio/laser.wav");
+		this.explosionSource = SoundManager.getInstance().getSound("audio/explosion2.wav");
 	}
 
 	public boolean hit() {
@@ -211,6 +219,18 @@ public class Ship extends Entity implements IExplodable, IDrawable {
 	public void fly() {	
 	}
 
+	public void shoot() {
+		if (!SoundManager.getInstance().isPlayingSound()) {
+			SoundManager.getInstance().playEffect(shootSound);	
+		}		
+	};
+	
+	public void explode() {
+		if (!SoundManager.getInstance().isPlayingSound()) {
+			SoundManager.getInstance().playEffect(explosionSource);
+		}
+	}
+	
 	public void addEnergy(Energy e) {
 		
 		energy += e.getAmount();

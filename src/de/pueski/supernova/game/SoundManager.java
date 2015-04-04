@@ -33,6 +33,9 @@ package de.pueski.supernova.game;
  */
 
 import java.nio.IntBuffer;
+import java.util.HashMap;
+
+import javax.print.attribute.HashAttributeSet;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -57,6 +60,8 @@ public class SoundManager {
 
 	private static final Log log = LogFactory.getLog(SoundManager.class);
 	
+	private static SoundManager INSTANCE = null;
+	
 	/** We support at most 256 buffers */
 	private int[] buffers = new int[256];
 
@@ -75,10 +80,29 @@ public class SoundManager {
 	/** Current index in our enemylaserSource list */
 	private int sourceIndex;
 
+	private static final HashMap<String, Integer> soundBank = new HashMap<String, Integer>();
+	
 	/**
 	 * Creates a new SoundManager
 	 */
-	public SoundManager() {
+	private SoundManager() {		
+		initialize(256);
+		addSound("audio/zap.wav");
+		addSound("audio/laser.wav");
+		addSound("audio/explosion2.wav");
+		addSound("audio/energy2.wav");
+		addSound("audio/energy_low.wav");
+		addSound("audio/reload.wav");
+		addSound("audio/shield.wav");
+		addSound("audio/gameover.wav");
+		addSound("audio/laser.wav");
+	}
+	
+	public static SoundManager getInstance() {
+		if (INSTANCE == null) {
+			INSTANCE = new SoundManager();
+		}
+		return INSTANCE;
 	}
 
 	/**
@@ -158,7 +182,7 @@ public class SoundManager {
 	 *            Path to file to load
 	 * @return index into SoundManagers buffer list
 	 */
-	public int addSound(String path) {
+	private int addSound(String path) {
 		// Generate 1 buffer entry
 		scratchBuffer.rewind().position(0).limit(1);
 		AL10.alGenBuffers(scratchBuffer);
@@ -173,8 +197,11 @@ public class SoundManager {
 		// unload file again
 		wavefile.dispose();
 
+		soundBank.put(path, bufferIndex);
+		
 		// return index for this sound
 		return bufferIndex++;
+		
 	}
 
 	/**
@@ -215,6 +242,10 @@ public class SoundManager {
 	
 	public void adjustVolume(int sourceIndex,float volume) {
 		AL10.alSourcef(sources[sourceIndex], AL10.AL_GAIN, volume);
+	}
+
+	public int getSound(String key) {
+		return soundBank.get(key);
 	}
 	
 }

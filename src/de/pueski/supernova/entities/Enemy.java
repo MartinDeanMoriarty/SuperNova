@@ -4,6 +4,7 @@ import java.util.Random;
 
 import org.lwjgl.opengl.GL11;
 
+import de.pueski.supernova.game.SoundManager;
 import de.pueski.supernova.game.TextureManager;
 
 public class Enemy extends Entity implements IExplodable {
@@ -41,6 +42,10 @@ public class Enemy extends Entity implements IExplodable {
 	
 	private static final Random random = new Random();
 
+	private int shootSound;
+	
+	private int explosionSource;
+
 	public Enemy(float xLoc, float yLoc, int hitPoints, long shotInterval, int enemyClass) {
 		this.xLoc = xLoc;
 		this.yLoc = yLoc;
@@ -64,7 +69,9 @@ public class Enemy extends Entity implements IExplodable {
 		this.lastShotTime = System.currentTimeMillis();
 		this.shotInterval = shotInterval;
 		this.size = 20.0f;
-		this.kind = random.nextInt(2); 
+		this.kind = random.nextInt(2);
+		this.shootSound = SoundManager.getInstance().getSound("audio/zap.wav");
+		this.explosionSource = SoundManager.getInstance().getSound("audio/explosion2.wav");
 	}
 
 	/**
@@ -157,6 +164,18 @@ public class Enemy extends Entity implements IExplodable {
 
 	}
 
+	public void shoot() {
+		if (!SoundManager.getInstance().isPlayingSound()) {
+			SoundManager.getInstance().playEffect(shootSound);	
+		}		
+	}
+	
+	public void explode() {
+		if (!SoundManager.getInstance().isPlayingSound()) {
+			SoundManager.getInstance().playEffect(explosionSource);
+		}
+	}
+	
 	public int getExplosionIndex() {
 		return explosionIndex;
 	}

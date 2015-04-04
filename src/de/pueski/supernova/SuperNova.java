@@ -117,6 +117,8 @@ public class SuperNova {
 	private static long lastAmmoTime = 5000l;
 	private static long lastEnergyTime;
 
+	private static int gameOverSource;
+
 
 	
 	private SuperNova() {
@@ -208,6 +210,7 @@ public class SuperNova {
 		energyWarningSource = sm.addSound("audio/energy_low.wav");
 		reloadSource = sm.addSound("audio/reload.wav");
 		shieldSource = sm.addSound("audio/shield.wav");
+		gameOverSource = sm.addSound("audio/gameover.wav");
 		
 		float volume = 0.4f;
 		
@@ -694,6 +697,7 @@ public class SuperNova {
 					if (!explodables.contains(ship)) {
 						if (SOUND_ENABLED) {
 							sm.playEffect(explosionSource);
+							sm.playEffect(gameOverSource);
 						}
 						explodables.add(ship);
 						gameOverText.setText("Game over! Score : " + score);

@@ -8,13 +8,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
 import javax.imageio.ImageIO;
-import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -141,6 +139,7 @@ public class Exploder {
 			}
 		}
 		
+		// sort alphabetically
 		Collections.sort(inputFiles, new Comparator<File>() {
 			@Override
 			public int compare(File o1, File o2) {

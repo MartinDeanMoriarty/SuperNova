@@ -204,10 +204,10 @@ public class SuperNova {
 		shipLaserSource = sm.addSound("audio/laser.wav");
 		enemylaserSource = sm.addSound("audio/zap.wav");
 		explosionSource = sm.addSound("audio/explosion2.wav");
-		energyWarningSource = sm.addSound("audio/energywarning.wav");
+		energySource = sm.addSound("audio/energy2.wav");
+		energyWarningSource = sm.addSound("audio/energy_low.wav");
 		reloadSource = sm.addSound("audio/reload.wav");
-		energySource = sm.addSound("audio/tada.wav");
-		shieldSource = sm.addSound("audio/portal.wav");
+		shieldSource = sm.addSound("audio/shield.wav");
 		
 		float volume = 0.4f;
 		
